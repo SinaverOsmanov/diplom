@@ -21,7 +21,6 @@ const ContentStyle = styled(Content)`
   padding: 40px 20px;
   height: calc(100vh - 64px);
   /* background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%); */
-  box-shadow: 0px 0px 8px 3px rgba(34, 60, 80, 0.2);
 `;
 
 export function ContentComponent() {
@@ -37,7 +36,7 @@ export function ContentComponent() {
 
   return (
     <ContentStyle>
-      <Row>
+      <>
         {!auth ? (
           <Routes>
             <Route path="/" exact component={LoginForm} />
@@ -55,7 +54,7 @@ export function ContentComponent() {
             <Redirect to="/" />
           </Routes>
         )}
-      </Row>
+      </>
     </ContentStyle>
   );
 }

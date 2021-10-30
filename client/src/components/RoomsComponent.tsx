@@ -44,10 +44,9 @@ export function RoomsComponent({
 
 const RoomItemStyle = styled.div`
   color: #fff;
-  text-shadow: 1px 1px #000000;
   height: 100%;
   padding: 10px;
-  background: #fff;
+  background: rgb(149 155 164);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -68,7 +67,7 @@ export function RoomItem({
   onRemoveRoom?(id: string): void;
 }) {
   return (
-    <Col key={room._id} span={8} style={{ height: "200px" }}>
+    <Col key={room._id} span={6} style={{ height: "200px" }}>
       <RoomItemStyle style={{ backgroundImage: `url(${room.photo})` }}>
         <Row>
           <Col>{room.roomNumber}</Col>
@@ -81,11 +80,13 @@ export function RoomItem({
           {room.description}
         </Row>
         <Row>
-          <Button type="primary">
-            <Link to={`/rooms/${room._id}`} type="primary">
-              Open
-            </Link>
-          </Button>
+          <Col span={12}>
+            <Button type="primary" block>
+              <Link to={`/rooms/${room._id}`} type="primary">
+                Открыть
+              </Link>
+            </Button>
+          </Col>
         </Row>
       </RoomItemStyle>
     </Col>

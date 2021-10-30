@@ -13,12 +13,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Switch, Route, Link, useLocation } from "react-router-dom";
 import MenuItem from "antd/lib/menu/MenuItem";
 import { dummyRequest } from "./../utils/fileUpload";
-import { addRoomThunkCreator } from "../store/reducers/roomReducers/addRoomReducer";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { RoomItemType } from "../common/models";
 import { Loading } from "../utils/loading";
 import { getRoomsThunkCreator } from "../store/reducers/roomsRedurers/getRoomsReducer";
-import { getPathName } from "../utils/getPathName";
 import { defaultValidateMessages } from "../utils/validateMessage";
 const { Title } = Typography;
 
@@ -57,37 +55,29 @@ export function AdminPage() {
       <Col span={16} offset={2}>
         <Switch>
           <Route path="/admin/panel">
-            <Row>
-              <Col style={{ width: "500px" }}>
-                <Row justify="center">
-                  <Title level={4}>Статус номеров</Title>
-                </Row>
-                <Row style={style} gutter={[40, 40]}>
-                  {rooms.map((room: RoomItemType) => (
-                    <Col span={6} key={room._id}>
-                      <Row
-                        style={{
-                          background: room.reserved ? "#dc3131" : "#3cd266",
-                          color: "white",
-                          padding: "36.5px 0",
-                        }}
-                        justify="center"
-                      >
-                        {room.roomNumber}
-                      </Row>
-                    </Col>
-                  ))}
-                </Row>
-              </Col>
-            </Row>
+            <AdminContentComponent title={"Статус номеров"}>
+              <Row style={style} gutter={[40, 40]}>
+                {rooms.map((room: RoomItemType) => (
+                  <Col span={6} key={room._id}>
+                    <Row
+                      style={{
+                        background: room.reserved ? "#dc3131" : "#3cd266",
+                        color: "white",
+                        padding: "36.5px 0",
+                      }}
+                      justify="center"
+                    >
+                      {room.roomNumber}
+                    </Row>
+                  </Col>
+                ))}
+              </Row>
+            </AdminContentComponent>
           </Route>
           <Route path="/admin/create">
-            <Row>
-              <Title level={4}>Создание комнаты</Title>
-            </Row>
-            <Row>
+            <AdminContentComponent title={"Создание комнаты"}>
               <CreateRoomForm />
-            </Row>
+            </AdminContentComponent>
           </Route>
         </Switch>
       </Col>
@@ -101,6 +91,27 @@ type ValuesType = {
   quality: string;
   upload: null | File[] | File;
 };
+
+function AdminContentComponent({
+  children,
+  title,
+}: {
+  children: React.ReactNode;
+  title: string;
+}) {
+  return (
+    <Row justify="center">
+      <Col span={24}>
+        <Row justify="center">
+          <Title level={4}>{title}</Title>
+        </Row>
+        <Row>
+          <Col span={24}>{children}</Col>
+        </Row>
+      </Col>
+    </Row>
+  );
+}
 
 function CreateRoomForm() {
   const [form] = Form.useForm();
@@ -145,86 +156,88 @@ function CreateRoomForm() {
   // };
 
   return (
-    <Form
-      style={{
-        justifyContent: "space-between",
-        display: "flex",
-        flexDirection: "column",
-        flex: "1 0 0",
-      }}
-      layout="horizontal"
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 10 }}
-      validateMessages={defaultValidateMessages}
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-      onReset={onReset}
-    >
-      <Form.Item
-        label="Название"
-        name="name"
-        rules={[
-          {
-            whitespace: true,
-            message: "Не оставляйте пустые поля",
-          },
-          {
-            type: "string",
-            required: true,
-            message: "Поле название является обязательным",
-          },
-          {
-            min: 3,
-            message: "Введите не меньше 3х символов",
-          },
-          {
-            pattern: new RegExp(/\d/g),
-            message: "В названии не должно быть чисел",
-          },
-        ]}
+    <Row>
+      <Form
+        style={{
+          justifyContent: "space-between",
+          display: "flex",
+          flexDirection: "column",
+          flex: "1 0 0",
+        }}
+        layout="horizontal"
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 10 }}
+        validateMessages={defaultValidateMessages}
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+        onReset={onReset}
       >
-        <Input name="title" />
-      </Form.Item>
-      <Form.Item
-        label="Описание"
-        name="description"
-        rules={[{ required: true }]}
-      >
-        <Input.TextArea name="description" />
-      </Form.Item>
-      <Form.Item
-        label="Комфортабельность"
-        name="quality"
-        rules={[{ required: true }]}
-      >
-        <Select placeholder="Выберите качество комнаты">
-          <Select.Option value="economy">Эконом</Select.Option>
-          <Select.Option value="standart">Стандарт</Select.Option>
-          <Select.Option value="lux">Люкс</Select.Option>
-        </Select>
-      </Form.Item>
-      <Form.Item
-        label="Upload"
-        name="upload"
-        rules={[{ required: true, type: "array" }]}
-        getValueFromEvent={normFile}
-        valuePropName="fileList"
-      >
-        <Upload
-          showUploadList={true}
-          customRequest={dummyRequest}
-          listType="picture"
+        <Form.Item
+          label="Название"
+          name="name"
+          rules={[
+            {
+              whitespace: true,
+              message: "Не оставляйте пустые поля",
+            },
+            {
+              type: "string",
+              required: true,
+              message: "Поле название является обязательным",
+            },
+            {
+              min: 3,
+              message: "Введите не меньше 3х символов",
+            },
+            {
+              pattern: new RegExp(/\d/g),
+              message: "В названии не должно быть чисел",
+            },
+          ]}
         >
-          <Button> Click to Upload</Button>
-        </Upload>
-      </Form.Item>
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
-          Создать комнату
-        </Button>
-      </Form.Item>
-    </Form>
+          <Input name="title" />
+        </Form.Item>
+        <Form.Item
+          label="Описание"
+          name="description"
+          rules={[{ required: true }]}
+        >
+          <Input.TextArea name="description" />
+        </Form.Item>
+        <Form.Item
+          label="Комфортабельность"
+          name="quality"
+          rules={[{ required: true }]}
+        >
+          <Select placeholder="Выберите качество комнаты">
+            <Select.Option value="economy">Эконом</Select.Option>
+            <Select.Option value="standart">Стандарт</Select.Option>
+            <Select.Option value="lux">Люкс</Select.Option>
+          </Select>
+        </Form.Item>
+        <Form.Item
+          label="Upload"
+          name="upload"
+          rules={[{ required: true, type: "array" }]}
+          getValueFromEvent={normFile}
+          valuePropName="fileList"
+        >
+          <Upload
+            showUploadList={true}
+            customRequest={dummyRequest}
+            listType="picture"
+          >
+            <Button> Click to Upload</Button>
+          </Upload>
+        </Form.Item>
+        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          <Button type="primary" htmlType="submit">
+            Создать комнату
+          </Button>
+        </Form.Item>
+      </Form>
+    </Row>
   );
 }
