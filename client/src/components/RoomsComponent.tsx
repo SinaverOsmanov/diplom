@@ -1,13 +1,9 @@
-import { CloseOutlined } from "@ant-design/icons";
 import { Row, Col, Button, Typography } from "antd";
 import { useLocation, Link } from "react-router-dom";
 import styled from "styled-components";
 import { RoomItemType } from "../common/models";
 import { BadgeComponent } from "./BadgeComponent";
-import { getPathName } from "../utils/pathName";
-import { getDataLocalStorage } from "../utils/localStorage";
-import { useDispatch } from "react-redux";
-import { reservedRoomThunkCreator } from "./../store/reducers/reservedReducers/reservedRoomReducer";
+import { getPathName } from "../utils/getPathName";
 
 const { Title } = Typography;
 export function RoomsComponent({
@@ -22,7 +18,7 @@ export function RoomsComponent({
   return (
     <>
       <Title level={3}>{title}</Title>
-      <Row gutter={[10, 10]}>
+      <Row gutter={[20, 20]}>
         {rooms.length > 0 ? (
           rooms.map((room: RoomItemType) => (
             <RoomItem key={room._id} room={room} />
@@ -72,7 +68,7 @@ export function RoomItem({
   onRemoveRoom?(id: string): void;
 }) {
   return (
-    <Col key={room._id} span={6} style={{ height: "200px" }}>
+    <Col key={room._id} span={8} style={{ height: "200px" }}>
       <RoomItemStyle style={{ backgroundImage: `url(${room.photo})` }}>
         <Row>
           <Col>{room.roomNumber}</Col>

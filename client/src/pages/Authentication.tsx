@@ -1,12 +1,13 @@
-import { RegistrationForm } from "../components/Form/RegistrationForm";
-import { LoginForm } from "../components/Form/LoginForm";
-import React from "react";
+import { Col, Row } from "antd";
 
-export function Authentication() {
+export function Authorization({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <LoginForm />
-      <RegistrationForm />
-    </>
+    <Col span={24}>
+      <Row justify="end">
+        <Col span={12} style={{ border: "1px solid #fff" }}>
+          {children}
+        </Col>
+      </Row>
+    </Col>
   );
 }

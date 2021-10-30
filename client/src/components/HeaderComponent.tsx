@@ -18,7 +18,7 @@ export function HeaderComponent() {
     history.push("/");
   }
   return (
-    <Header style={{ color: "white" }}>
+    <Header style={{ color: "white", background: "#332929" }}>
       <Row style={{ textAlign: "center" }} justify="space-between">
         <Col span={2} offset={3}>
           <Link to={`/`}>DIPLOM</Link>

@@ -10,7 +10,7 @@ import {
   Upload,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { Switch, Route, Link, useLocation, useHistory } from "react-router-dom";
+import { Switch, Route, Link, useLocation } from "react-router-dom";
 import MenuItem from "antd/lib/menu/MenuItem";
 import { dummyRequest } from "./../utils/fileUpload";
 import { addRoomThunkCreator } from "../store/reducers/roomReducers/addRoomReducer";
@@ -18,6 +18,8 @@ import { useEffect, useState } from "react";
 import { RoomItemType } from "../common/models";
 import { Loading } from "../utils/loading";
 import { getRoomsThunkCreator } from "../store/reducers/roomsRedurers/getRoomsReducer";
+import { getPathName } from "../utils/getPathName";
+import { defaultValidateMessages } from "../utils/validateMessage";
 const { Title } = Typography;
 
 export function AdminPage() {
@@ -27,7 +29,6 @@ export function AdminPage() {
   };
   const dispatch = useDispatch();
   const { pathname } = useLocation();
-
   const rooms: RoomItemType[] = useSelector((state: any) => state.rooms.rooms);
   const loading: RoomItemType[] = useSelector(
     (state: any) => state.rooms.loading
@@ -94,42 +95,54 @@ export function AdminPage() {
   );
 }
 
-type valuesType = {
+type ValuesType = {
   title: string;
   description: string;
   quality: string;
-  upload: null | { fileList: File[]; file: File };
+  upload: null | File[] | File;
 };
 
 function CreateRoomForm() {
+  const [form] = Form.useForm();
   const dispatch = useDispatch();
-  const [form, setForm] = useState<valuesType>({
-    title: "",
-    description: "",
-    quality: "",
-    upload: null,
-  });
 
-  const onFinish = async (values: valuesType) => {
+  const onFinish = async (values: ValuesType) => {
+    debugger;
     const { title, description, quality, upload } = values;
-    if (upload) {
-      debugger;
-      dispatch(
-        addRoomThunkCreator(title, description, quality, upload.file.name)
-      );
-    }
-
-    setForm({
-      title: "",
-      description: "",
-      quality: "",
-      upload: null,
-    });
+    const data = { title: title.trim() };
+    // if (upload) {
+    //   dispatch(
+    //     addRoomThunkCreator(title, description, quality, upload[0].name)
+    //   );
+    // }
+  };
+  const onReset = () => {
+    form.resetFields();
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
+
+  const normFile = (e: any) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
+  };
+
+  // const validateMessages = {
+  //   required: "'${name}' Пожалуйста введите название комнаты!",
+  //   string: {
+  //     len: "'${name}' must be exactly ${len} characters",
+  //     min: "'${name}' must be at least ${min} characters",
+  //     max: "'${name}' cannot be longer than ${max} characters",
+  //     range: "'${name}' must be between ${min} and ${max} characters",
+  //   },
+  //   array: {
+
+  //   }
+  // };
 
   return (
     <Form
@@ -139,42 +152,54 @@ function CreateRoomForm() {
         flexDirection: "column",
         flex: "1 0 0",
       }}
-      layout="vertical"
-      name="basic"
+      layout="horizontal"
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 10 }}
+      validateMessages={defaultValidateMessages}
       initialValues={{ remember: true }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       autoComplete="off"
+      onReset={onReset}
     >
       <Form.Item
         label="Название"
-        name="title"
+        name="name"
         rules={[
-          { required: true, message: "Пожалуйста введите название комнаты!" },
+          {
+            whitespace: true,
+            message: "Не оставляйте пустые поля",
+          },
+          {
+            type: "string",
+            required: true,
+            message: "Поле название является обязательным",
+          },
+          {
+            min: 3,
+            message: "Введите не меньше 3х символов",
+          },
+          {
+            pattern: new RegExp(/\d/g),
+            message: "В названии не должно быть чисел",
+          },
         ]}
-        initialValue={form.title}
       >
-        <Input />
+        <Input name="title" />
       </Form.Item>
       <Form.Item
         label="Описание"
         name="description"
-        initialValue={form.description}
-        rules={[{ required: true, message: "Пожалуйста введите описание!" }]}
+        rules={[{ required: true }]}
       >
-        <Input />
+        <Input.TextArea name="description" />
       </Form.Item>
       <Form.Item
         label="Комфортабельность"
         name="quality"
-        rules={[
-          { required: true, message: "Пожалуйста введите качество комнаты!" },
-        ]}
-        initialValue={form.quality}
+        rules={[{ required: true }]}
       >
-        <Select placeholder="Select a option and change input text above">
+        <Select placeholder="Выберите качество комнаты">
           <Select.Option value="economy">Эконом</Select.Option>
           <Select.Option value="standart">Стандарт</Select.Option>
           <Select.Option value="lux">Люкс</Select.Option>
@@ -183,10 +208,15 @@ function CreateRoomForm() {
       <Form.Item
         label="Upload"
         name="upload"
-        rules={[{ required: true }]}
-        initialValue={form.upload}
+        rules={[{ required: true, type: "array" }]}
+        getValueFromEvent={normFile}
+        valuePropName="fileList"
       >
-        <Upload showUploadList={true} customRequest={dummyRequest}>
+        <Upload
+          showUploadList={true}
+          customRequest={dummyRequest}
+          listType="picture"
+        >
           <Button> Click to Upload</Button>
         </Upload>
       </Form.Item>
@@ -195,11 +225,6 @@ function CreateRoomForm() {
           Создать комнату
         </Button>
       </Form.Item>
-      {/* <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="button" onClick={clear}>
-          Очистить поля
-        </Button>
-      </Form.Item> */}
     </Form>
   );
 }

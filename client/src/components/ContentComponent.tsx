@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
-import { Layout } from "antd";
+import { Layout, Row } from "antd";
 import { Routes } from "./Routes";
 import { Route, Redirect } from "react-router-dom";
-import { LoginForm } from "./Form/LoginForm";
-import { RegistrationForm } from "./Form/RegistrationForm";
+import { LoginForm } from "./authForm/LoginForm";
+import { RegistrationForm } from "./authForm/RegistrationForm";
 import { AdminPage } from "../pages/AdminPage";
 import { ExtendedRoomPage } from "../pages/ExtendedRoomPage";
 import { RoomsPage } from "../pages/RoomsPage";
@@ -18,8 +18,10 @@ const { Content } = Layout;
 const ContentStyle = styled(Content)`
   width: 1200px;
   margin: 0 auto;
-  padding: 40px 0;
+  padding: 40px 20px;
   height: calc(100vh - 64px);
+  /* background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%); */
+  box-shadow: 0px 0px 8px 3px rgba(34, 60, 80, 0.2);
 `;
 
 export function ContentComponent() {
@@ -35,7 +37,7 @@ export function ContentComponent() {
 
   return (
     <ContentStyle>
-      <div>
+      <Row>
         {!auth ? (
           <Routes>
             <Route path="/" exact component={LoginForm} />
@@ -53,7 +55,7 @@ export function ContentComponent() {
             <Redirect to="/" />
           </Routes>
         )}
-      </div>
+      </Row>
     </ContentStyle>
   );
 }
