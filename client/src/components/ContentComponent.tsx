@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDataLocalStorage } from "./../utils/localStorage";
 import { AUTH_USER_SUCCESS } from "./../store/types/types";
 import styled from "styled-components";
+import { useHistory, useLocation } from "react-router";
 
 const { Content } = Layout;
 
@@ -25,11 +26,13 @@ const ContentStyle = styled(Content)`
 export function ContentComponent() {
   const { auth } = useSelector((state: any) => state.auth);
   const dispatch = useDispatch();
-
+  const { pathname } = useLocation();
+  const history = useHistory();
   useEffect(() => {
     const data = getDataLocalStorage();
     if (data) {
       dispatch({ type: AUTH_USER_SUCCESS, payload: true });
+      history.push(pathname);
     }
   }, [dispatch]);
 
