@@ -15,6 +15,23 @@ export const RoomShadowStyle = styled.div`
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease-in-out;
+`;
+
+export const RoomItemStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #fff;
+  height: 200px;
+  background: rgb(149 155 164 / 70%);
+  border-radius: 5px;
+  box-shadow: 3px 4px 4px 0px rgb(0 0 0 / 19%);
+  width: 100%;
+  background: url(https://source.unsplash.com/random) center center / cover
+    no-repeat;
+  position: relative;
+  justify-content: space-between;
+  padding: 10px;
 
   h1 {
     color: #fff;
@@ -28,25 +45,5 @@ export const RoomShadowStyle = styled.div`
 
   div {
     justify-content: center;
-  }
-`;
-
-export const RoomItemStyle = styled.div`
-  color: #fff;
-  height: 100%;
-  background: rgb(149 155 164 / 70%);
-  border-radius: 5px;
-  box-shadow: 3px 4px 4px 0px rgb(0 0 0 / 19%);
-  height: 100%;
-  background: url(https://source.unsplash.com/random) center center / cover
-    no-repeat;
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
-
-  &:hover .showDescRoom {
-    top: 0;
-    opacity: 1;
-    visibility: visible;
   }
 `;

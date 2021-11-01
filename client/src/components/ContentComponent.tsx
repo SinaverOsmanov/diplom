@@ -34,7 +34,7 @@ export function ContentComponent() {
       dispatch({ type: AUTH_USER_SUCCESS, payload: true });
       history.push(pathname);
     }
-  }, [dispatch]);
+  }, [dispatch, history, pathname]);
 
   return (
     <ContentStyle>
@@ -49,7 +49,7 @@ export function ContentComponent() {
         <Routes>
           <Route path="/" exact component={RoomsPage} />
           <Route path="/admin" component={AdminPage} />
-          <Route path="/rooms/:id" component={ExtendedRoomPage} />
+          <Route path="/rooms/:roomId" component={ExtendedRoomPage} />
           <Route path="/rooms" component={RoomsPage} />
           <Route path="/reserved" component={UserRoomsPage} />
           <Redirect to="/admin" />

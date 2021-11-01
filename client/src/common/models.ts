@@ -46,3 +46,10 @@ export type DefaultStateAuthType = {
 };
 
 export type getApiRoomsType = { rooms: RoomItemType[]; codeStatus: number };
+
+export type ValuesType = {
+  title: string;
+  description: string;
+  quality: string;
+  upload: null | File[];
+};

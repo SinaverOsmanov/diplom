@@ -1,13 +1,24 @@
-import { Button, Col, Row, Typography } from "antd";
+import {
+  Button,
+  Col,
+  Input,
+  Select,
+  Form,
+  Row,
+  Typography,
+  Upload,
+} from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { RoomItemType } from "../common/models";
-import { useEffect } from "react";
+import { RoomItemType, ValuesType } from "../common/models";
+import { useEffect, useState } from "react";
 import { Loading } from "../utils/loading";
 import { BadgeComponent } from "../components/BadgeComponent";
 import { getRoomByIdThunkCreator } from "../store/reducers/roomReducers/getRoomByIdReducer";
 import { reservedRoomThunkCreator } from "../store/reducers/reservedReducers/reservedRoomReducer";
 import styled from "styled-components";
+import { updateRoomThunkCreator } from "./../store/reducers/roomReducers/updateRoomReducer";
+import { defaultValidateMessages } from "../utils/validateMessage";
 const { Title } = Typography;
 
 const ExtendedRowStyle = styled(Row)`
@@ -18,10 +29,11 @@ const ExtendedRowStyle = styled(Row)`
   height: 450px;
   justify-content: space-between;
 `;
-export function ExtendedRoomPage() {
-  let { id }: { id: string } = useParams();
-  const room: RoomItemType = useSelector((state: any) => state.room.room);
 
+export function ExtendedRoomPage() {
+  let { roomId }: { roomId: string } = useParams();
+  const [editRoom, setEditRoom] = useState(false);
+  const room: RoomItemType = useSelector((state: any) => state.room.room);
   const loading = useSelector((state: any) => state.room.loading);
 
   const dispatch = useDispatch();
@@ -35,8 +47,8 @@ export function ExtendedRoomPage() {
   }
 
   useEffect(() => {
-    dispatch(getRoomByIdThunkCreator(id));
-  }, [id, dispatch]);
+    dispatch(getRoomByIdThunkCreator(roomId));
+  }, [roomId, dispatch]);
 
   if (loading) {
     return <Loading />;
@@ -73,41 +85,166 @@ export function ExtendedRoomPage() {
             justifyContent: "space-between",
           }}
         >
-          <Row style={{ alignSelf: "start" }}>
-            <Col>
-              <Row
-                style={{
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                }}
-              >
-                Название комнаты: {room.title}
+          {editRoom ? (
+            <UpdateRoomForm
+              room={room}
+              closeEditRoom={() => setEditRoom(false)}
+            />
+          ) : (
+            <>
+              <Row style={{ alignSelf: "start" }}>
+                <Col>
+                  <Row
+                    style={{
+                      fontSize: "15px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Название комнаты: {room.title}
+                  </Row>
+                  <Row>Номер комнаты: {room.roomNumber}</Row>
+                  <Row>
+                    <span>Уровень комнаты: </span>
+                    <BadgeComponent quality={room.quality} />
+                  </Row>
+                  <Row>Описание: {room.description}</Row>
+                </Col>
               </Row>
-              <Row>Номер комнаты: {room.roomNumber}</Row>
-              <Row>
-                <span>Уровень комнаты: </span>
-                <BadgeComponent quality={room.quality} />
+              <Row justify="end" style={{ alignSelf: "end" }}>
+                <Col>
+                  <Button type="ghost" onClick={() => setEditRoom(true)}>
+                    Редактировать
+                  </Button>
+                </Col>
+                <Col>
+                  <Button
+                    type="primary"
+                    danger={room.reserved === null ? false : true}
+                    onClick={() =>
+                      room.reserved
+                        ? unReservedClickHandler(room._id)
+                        : reservedClickHandler(room._id)
+                    }
+                  >
+                    {room.reserved !== null
+                      ? "Отменить бронирование"
+                      : "Забронировать"}
+                  </Button>
+                </Col>
               </Row>
-              <Row>Описание: {room.description}</Row>
-            </Col>
-          </Row>
-          <Row justify="end" style={{ alignSelf: "end" }}>
-            <Button
-              type="primary"
-              danger={room.reserved === null ? false : true}
-              onClick={() =>
-                room.reserved
-                  ? unReservedClickHandler(room._id)
-                  : reservedClickHandler(room._id)
-              }
-            >
-              {room.reserved !== null
-                ? "Отменить бронирование"
-                : "Забронировать"}
-            </Button>
-          </Row>
+            </>
+          )}
         </Col>
       </ExtendedRowStyle>
     </>
+  );
+}
+
+export function UpdateRoomForm({
+  room,
+  closeEditRoom,
+}: {
+  room: RoomItemType;
+  closeEditRoom(bool: boolean): void;
+}) {
+  const dispatch = useDispatch();
+
+  const onFinish = async (values: ValuesType) => {
+    const { title, description, quality } = values;
+
+    dispatch(
+      updateRoomThunkCreator({
+        roomId: room._id,
+        title,
+        description,
+        quality,
+      })
+    );
+    closeEditRoom(false);
+  };
+
+  return (
+    <Row style={{ height: "100%" }}>
+      <Form
+        style={{
+          justifyContent: "space-between",
+          display: "flex",
+          flexDirection: "column",
+          flex: "1 0 0",
+        }}
+        layout="vertical"
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 10 }}
+        validateMessages={defaultValidateMessages}
+        initialValues={{ remember: true }}
+        onFinish={onFinish}
+        autoComplete="off"
+      >
+        <Row>
+          <Col flex={1}>
+            <Form.Item
+              label="Название"
+              name="title"
+              initialValue={room.title}
+              rules={[
+                {
+                  whitespace: true,
+                  message: "Не оставляйте пустые поля",
+                },
+                {
+                  type: "string",
+                  required: true,
+                  message: "Поле название является обязательным",
+                },
+                {
+                  min: 3,
+                  message: "Введите не меньше 3х символов",
+                },
+              ]}
+            >
+              <Input name="title" />
+            </Form.Item>
+            <Form.Item
+              label="Описание"
+              name="description"
+              initialValue={room.description}
+              rules={[{ required: true }]}
+            >
+              <Input.TextArea name="description" />
+            </Form.Item>
+            <Form.Item
+              label="Комфортабельность"
+              name="quality"
+              rules={[{ required: true }]}
+              initialValue={room.quality}
+            >
+              <Select placeholder="Выберите качество комнаты">
+                <Select.Option value="economy">Эконом</Select.Option>
+                <Select.Option value="standart">Стандарт</Select.Option>
+                <Select.Option value="lux">Люкс</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
+        <Form.Item
+          wrapperCol={{ offset: 8, span: 16 }}
+          style={{
+            alignContent: "flex-end",
+            margin: 0,
+          }}
+        >
+          <Button
+            type="primary"
+            htmlType="button"
+            onClick={() => closeEditRoom(false)}
+          >
+            Отменить
+          </Button>
+          <Button type="primary" htmlType="submit">
+            Сохранить
+          </Button>
+        </Form.Item>
+      </Form>
+    </Row>
   );
 }

@@ -148,6 +148,32 @@ router.post("/rooms/addRoom", async function (req: Request, res: Response) {
   }
 });
 
+router.patch(
+  "/rooms/updateRoom/:id",
+  async function (req: Request, res: Response) {
+    try {
+      const roomId = new ObjectId(req.params.id);
+      const { title, description, quality } = req.body;
+
+      const updatedRoom = await Room.update(
+        { _id: roomId },
+        { $set: { title, description, quality } }
+      );
+      if (updatedRoom) {
+        res.json({
+          data: {
+            roomId: roomId.toHexString(),
+            codeStatus: 202,
+            message: "Данные комнаты изменены",
+          },
+        });
+      }
+    } catch (error: any) {
+      badRequestJSON(res, 400, error.message);
+    }
+  }
+);
+
 router.patch("/reservRoom", async function (req: Request, res: Response) {
   try {
     const { id: userId } = getTokenData(req.cookies);

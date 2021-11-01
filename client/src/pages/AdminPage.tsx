@@ -8,18 +8,18 @@ import {
   Select,
   Menu,
   Upload,
-  Card,
+  Divider,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch, Route, Link, useLocation } from "react-router-dom";
 import MenuItem from "antd/lib/menu/MenuItem";
 import { dummyRequest } from "./../utils/fileUpload";
 import { useEffect } from "react";
-import { RoomItemType } from "../common/models";
+import { RoomItemType, ValuesType } from "../common/models";
 import { Loading } from "../utils/loading";
 import { getRoomsThunkCreator } from "../store/reducers/roomsRedurers/getRoomsReducer";
 import { defaultValidateMessages } from "../utils/validateMessage";
-import { addRoomThunkCreator } from "./../store/reducers/roomReducers/addRoomReducer";
+import { addRoomThunkCreator } from "../store/reducers/roomReducers/addRoomReducer";
 const { Title } = Typography;
 
 export function AdminPage() {
@@ -42,7 +42,7 @@ export function AdminPage() {
   }
 
   return (
-    <Row>
+    <Row justify="center">
       <Col span={6}>
         <Title level={3}>Панель администратора</Title>
         <Menu mode="vertical" defaultSelectedKeys={[pathname]}>
@@ -54,7 +54,13 @@ export function AdminPage() {
           </MenuItem>
         </Menu>
       </Col>
-      <Col span={16} offset={2}>
+      <Col span={1} offset={1}>
+        <Divider
+          type="vertical"
+          style={{ height: "100%", marginTop: "20px" }}
+        />
+      </Col>
+      <Col span={15} offset={1}>
         <Switch>
           <Route path="/admin/panel">
             <AdminContentComponent title={"Статус номеров"}>
@@ -78,7 +84,14 @@ export function AdminPage() {
           </Route>
           <Route path="/admin/create">
             <AdminContentComponent title={"Создание комнаты"}>
-              <CreateRoomForm />
+              <CreateRoomForm
+                initial={{
+                  title: "",
+                  description: "",
+                  quality: "standart",
+                  upload: null,
+                }}
+              />
             </AdminContentComponent>
           </Route>
         </Switch>
@@ -86,13 +99,6 @@ export function AdminPage() {
     </Row>
   );
 }
-
-type ValuesType = {
-  title: string;
-  description: string;
-  quality: string;
-  upload: null | File[];
-};
 
 function AdminContentComponent({
   children,
@@ -115,21 +121,12 @@ function AdminContentComponent({
   );
 }
 
-function CreateRoomForm() {
-  const [form] = Form.useForm();
+export function CreateRoomForm({ initial }: { initial: ValuesType }) {
   const dispatch = useDispatch();
 
   const onFinish = async (values: ValuesType) => {
     const { title, description, quality, upload } = values;
-    debugger;
-    if (upload) {
-      dispatch(
-        addRoomThunkCreator(title, description, quality, upload[0].name)
-      );
-    }
-  };
-  const onReset = () => {
-    form.resetFields();
+    dispatch(addRoomThunkCreator(title, description, quality, upload![0].name));
   };
 
   const normFile = (e: any) => {
@@ -148,18 +145,18 @@ function CreateRoomForm() {
           flexDirection: "column",
           flex: "1 0 0",
         }}
-        layout="horizontal"
+        layout="vertical"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 10 }}
         validateMessages={defaultValidateMessages}
         initialValues={{ remember: true }}
         onFinish={onFinish}
         autoComplete="off"
-        onReset={onReset}
       >
         <Form.Item
           label="Название"
-          name="name"
+          name="title"
+          initialValue={initial.title}
           rules={[
             {
               whitespace: true,
@@ -181,6 +178,7 @@ function CreateRoomForm() {
         <Form.Item
           label="Описание"
           name="description"
+          initialValue={initial.description}
           rules={[{ required: true }]}
         >
           <Input.TextArea name="description" />
@@ -189,6 +187,7 @@ function CreateRoomForm() {
           label="Комфортабельность"
           name="quality"
           rules={[{ required: true }]}
+          initialValue={initial.quality}
         >
           <Select placeholder="Выберите качество комнаты">
             <Select.Option value="economy">Эконом</Select.Option>
@@ -199,8 +198,8 @@ function CreateRoomForm() {
         <Form.Item
           label="Upload"
           name="upload"
-          rules={[{ required: true, type: "array" }]}
           getValueFromEvent={normFile}
+          initialValue={initial.upload}
           valuePropName="fileList"
         >
           <Upload

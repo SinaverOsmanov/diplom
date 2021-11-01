@@ -23,7 +23,7 @@ export function getRoomByIdReducer(
     case GET_ROOM_SUCCESS:
       return {
         ...state,
-        room: action.payload,
+        room: { ...state.room, ...action.payload },
         loading: false,
       };
 

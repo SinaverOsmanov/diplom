@@ -22,7 +22,7 @@ export type addRoomType = {
   title: string;
   description: string;
   quality: string;
-  file: string;
+  file: string | null;
 };
 
 export async function addRoomAPI({
@@ -36,6 +36,24 @@ export async function addRoomAPI({
     description,
     quality,
     file,
+  });
+}
+
+export async function updateRoomAPI({
+  roomId,
+  title,
+  description,
+  quality,
+}: {
+  roomId: string;
+  title: string;
+  description: string;
+  quality: string;
+}) {
+  return apiRequest(`rooms/updateRoom/${roomId}`, "PATCH", {
+    title,
+    description,
+    quality,
   });
 }
 

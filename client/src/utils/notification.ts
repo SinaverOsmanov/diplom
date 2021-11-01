@@ -1,26 +1,26 @@
-import { notification } from "antd";
+import { message } from "antd";
+
 export const messageNotification = (data: {
   codeStatus: number;
   message: string;
 }) => {
-  notification.config({ duration: 2, top: 70, placement: "topRight" });
+  const messageStyle = { fontSize: "16px", heigth: "64px" };
+
+  message.config({ duration: 2, maxCount: 3, top: 2 });
   if (data.codeStatus >= 200 && data.codeStatus < 300) {
-    notification.open({
-      message: data.message,
-      type: "success",
-      style: { width: 300 },
+    message.success({
+      content: data.message,
+      style: messageStyle,
     });
   } else if (data.codeStatus >= 400 && data.codeStatus < 500) {
-    notification.open({
-      message: data.message,
-      type: "error",
-      style: { width: 400 },
+    message.error({
+      content: data.message,
+      style: messageStyle,
     });
   } else {
-    notification.open({
-      message: data.message,
-      type: "info",
-      style: { width: 400 },
+    message.info({
+      content: data.message,
+      style: messageStyle,
     });
   }
 };
