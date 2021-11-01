@@ -7,8 +7,17 @@ import { Loading } from "../utils/loading";
 import { BadgeComponent } from "../components/BadgeComponent";
 import { getRoomByIdThunkCreator } from "../store/reducers/roomReducers/getRoomByIdReducer";
 import { reservedRoomThunkCreator } from "../store/reducers/reservedReducers/reservedRoomReducer";
+import styled from "styled-components";
 const { Title } = Typography;
 
+const ExtendedRowStyle = styled(Row)`
+  background: rgb(149 155 164 / 70%);
+  border-radius: 5px;
+  box-shadow: 3px 4px 4px 0px rgb(0 0 0 / 19%);
+  overflow: hidden;
+  height: 450px;
+  justify-content: space-between;
+`;
 export function ExtendedRoomPage() {
   let { id }: { id: string } = useParams();
   const room: RoomItemType = useSelector((state: any) => state.room.room);
@@ -29,50 +38,60 @@ export function ExtendedRoomPage() {
     dispatch(getRoomByIdThunkCreator(id));
   }, [id, dispatch]);
 
-  const style = { background: "#ccc", padding: "20px" };
-
   if (loading) {
     return <Loading />;
   }
 
   return (
     <>
-      <Title level={4}>Описание номера</Title>
-      <Row style={style}>
-        <Col span={6}>
+      <Title level={3}>Описание номера</Title>
+      <ExtendedRowStyle>
+        <Col span={7}>
           <div
             style={{
               alignItems: "center",
-              border: "1px solid #000",
               textAlign: "center",
               lineHeight: "13em",
               width: "100%",
               height: "100%",
-              backgroundImage: `url(${room.photo})`,
+
+              background:
+                "url(https://source.unsplash.com/random) center center / cover no-repeat",
+              // backgroundImage: `url(${room.photo})`,
             }}
           >
             <span>{room.photo}</span>
           </div>
         </Col>
-        <Col span={17} offset={1} style={{ alignSelf: "flex-end" }}>
-          <Row
-            style={{
-              marginBottom: "10px",
-              fontSize: "15px",
-              fontWeight: "bold",
-            }}
-          >
-            Название комнаты: {room.title}
+        <Col
+          span={16}
+          offset={1}
+          style={{
+            padding: "20px 20px 20px 0",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
+          <Row style={{ alignSelf: "start" }}>
+            <Col>
+              <Row
+                style={{
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                }}
+              >
+                Название комнаты: {room.title}
+              </Row>
+              <Row>Номер комнаты: {room.roomNumber}</Row>
+              <Row>
+                <span>Уровень комнаты: </span>
+                <BadgeComponent quality={room.quality} />
+              </Row>
+              <Row>Описание: {room.description}</Row>
+            </Col>
           </Row>
-          <Row>Номер комнаты: {room.roomNumber}</Row>
-          <Row>
-            <span>Уровень комнаты: </span>
-            <BadgeComponent quality={room.quality} />
-          </Row>
-          <Row style={{ marginBottom: "70px" }}>
-            Описание: {room.description}
-          </Row>
-          <Row justify="end">
+          <Row justify="end" style={{ alignSelf: "end" }}>
             <Button
               type="primary"
               danger={room.reserved === null ? false : true}
@@ -88,7 +107,7 @@ export function ExtendedRoomPage() {
             </Button>
           </Row>
         </Col>
-      </Row>
+      </ExtendedRowStyle>
     </>
   );
 }

@@ -5,7 +5,7 @@ export function qualityTitle(str: string) {
     case "standart":
       return { text: "Стандарт", color: "#108ee9" };
     case "lux":
-      return { text: "Люкс", color: "#fc0" };
+      return { text: "Люкс", color: "#ff2300" };
     default:
       return { text: "Неизвесто", color: "#ссс" };
   }

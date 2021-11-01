@@ -37,14 +37,14 @@ export function AuthForm({
         {children}
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Row align="middle">
-            <Col>
-              <Button type="primary" htmlType="submit">
+            <Col span={4}>
+              <Button type="primary" htmlType="submit" block>
                 {submitBtnText}
               </Button>
             </Col>
             <Col style={{ marginLeft: "5px" }}>
               <Link to={path ? "/" : "/registration"}>
-                {path ? "or Login" : "or Registration"}
+                {path ? "или Вход" : "или Регистрация"}
               </Link>
             </Col>
           </Row>

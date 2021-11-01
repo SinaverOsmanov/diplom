@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Layout, Row } from "antd";
+import { useEffect } from "react";
+import { Layout } from "antd";
 import { Routes } from "./Routes";
 import { Route, Redirect } from "react-router-dom";
 import { LoginForm } from "./authForm/LoginForm";
@@ -20,7 +20,6 @@ const ContentStyle = styled(Content)`
   margin: 0 auto;
   padding: 40px 20px;
   height: calc(100vh - 64px);
-  /* background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%); */
 `;
 
 export function ContentComponent() {
@@ -36,25 +35,23 @@ export function ContentComponent() {
 
   return (
     <ContentStyle>
-      <>
-        {!auth ? (
-          <Routes>
-            <Route path="/" exact component={LoginForm} />
-            <Route path="/login" component={LoginForm} />
-            <Route path="/registration" component={RegistrationForm} />
-            <Redirect to="/" />
-          </Routes>
-        ) : (
-          <Routes>
-            <Route path="/" exact component={RoomsPage} />
-            <Route path="/admin" component={AdminPage} />
-            <Route path="/rooms/:id" component={ExtendedRoomPage} />
-            <Route path="/rooms" component={RoomsPage} />
-            <Route path="/reserved" component={UserRoomsPage} />
-            <Redirect to="/" />
-          </Routes>
-        )}
-      </>
+      {!auth ? (
+        <Routes>
+          <Route path="/" exact component={LoginForm} />
+          <Route path="/login" component={LoginForm} />
+          <Route path="/registration" component={RegistrationForm} />
+          <Redirect to="/" />
+        </Routes>
+      ) : (
+        <Routes>
+          <Route path="/" exact component={RoomsPage} />
+          <Route path="/admin" component={AdminPage} />
+          <Route path="/rooms/:id" component={ExtendedRoomPage} />
+          <Route path="/rooms" component={RoomsPage} />
+          <Route path="/reserved" component={UserRoomsPage} />
+          <Redirect to="/admin" />
+        </Routes>
+      )}
     </ContentStyle>
   );
 }

@@ -22,7 +22,7 @@ export function LoginForm() {
       submitBtnText={"Вход"}
     >
       <Form.Item
-        label="Email"
+        label="Почта"
         name="email"
         rules={[
           {
@@ -34,13 +34,15 @@ export function LoginForm() {
         <Input />
       </Form.Item>
       <Form.Item
-        label="Password"
+        label="Пароль"
         name="password"
         rules={[
           {
             required: true,
+            message: "Пароль является обязательным",
+          },
+          {
             type: "string",
-            min: 3,
             whitespace: true,
           },
         ]}

@@ -24,7 +24,7 @@ export function RegistrationForm() {
         submitBtnText={"Регистрация"}
       >
         <Form.Item
-          label="Email"
+          label="Почта"
           name="email"
           rules={[
             {
@@ -36,13 +36,12 @@ export function RegistrationForm() {
           <Input />
         </Form.Item>
         <Form.Item
-          label="Password"
+          label="Пароль"
           name="password"
           rules={[
             {
               required: true,
               type: "string",
-              min: 3,
               whitespace: true,
             },
           ]}
@@ -51,7 +50,7 @@ export function RegistrationForm() {
         </Form.Item>
         <Form.Item
           name="confirm"
-          label="Confirm Password"
+          label="Подтверждение пароля"
           dependencies={["password"]}
           hasFeedback
           rules={[

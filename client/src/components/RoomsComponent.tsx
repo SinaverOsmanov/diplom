@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { RoomItemType } from "../common/models";
 import { BadgeComponent } from "./BadgeComponent";
 import { getPathName } from "../utils/getPathName";
+import { RoomItem } from "./RoomItem";
 
 const { Title } = Typography;
 export function RoomsComponent({
@@ -39,56 +40,5 @@ export function RoomsComponent({
         )}
       </Row>
     </>
-  );
-}
-
-const RoomItemStyle = styled.div`
-  color: #fff;
-  height: 100%;
-  padding: 10px;
-  background: rgb(149 155 164);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-
-  div:first-child {
-    justify-content: space-between;
-  }
-  div {
-    justify-content: center;
-  }
-`;
-
-export function RoomItem({
-  room,
-  onRemoveRoom,
-}: {
-  room: RoomItemType;
-  onRemoveRoom?(id: string): void;
-}) {
-  return (
-    <Col key={room._id} span={6} style={{ height: "200px" }}>
-      <RoomItemStyle style={{ backgroundImage: `url(${room.photo})` }}>
-        <Row>
-          <Col>{room.roomNumber}</Col>
-          <Col>
-            <BadgeComponent quality={room.quality} />
-          </Col>
-        </Row>
-        <Row>{room.title}</Row>
-        <Row style={{ lineHeight: 1, overflow: "hidden", height: "2em" }}>
-          {room.description}
-        </Row>
-        <Row>
-          <Col span={12}>
-            <Button type="primary" block>
-              <Link to={`/rooms/${room._id}`} type="primary">
-                Открыть
-              </Link>
-            </Button>
-          </Col>
-        </Row>
-      </RoomItemStyle>
-    </Col>
   );
 }

@@ -18,7 +18,7 @@ function Shell() {
     <Router>
       <Layout
         style={{
-          backgroundColor: "#f6f6f6",
+          backgroundColor: "rgb(248 242 255)",
         }}
       >
         <HeaderComponent />

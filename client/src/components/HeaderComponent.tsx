@@ -1,18 +1,23 @@
-import { Row, Col, Layout, Button, Divider } from "antd";
+import { Row, Col, Layout } from "antd";
 import { Link } from "react-router-dom";
 import { getDataLocalStorage } from "../utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import { logoutUserThunkCreator } from "../store/reducers/userReducers/logoutUserReducer";
 import styled from "styled-components";
 const { Header } = Layout;
 
 const HeaderStyle = styled(Header)`
   a {
-    font-weight: bold;
+    font-weight: 500;
   }
   button {
-    font-weight: bold;
+    font-weight: 500;
+  }
+`;
+
+const MenuRowStyle = styled(Row)`
+  & > div {
   }
 `;
 
@@ -27,6 +32,7 @@ export function HeaderComponent() {
     dispatch(logoutUserThunkCreator());
     history.push("/");
   }
+
   return (
     <HeaderStyle
       style={{
@@ -39,40 +45,30 @@ export function HeaderComponent() {
         <Col span={2} offset={3}>
           <Link to={`/`}>DIPLOM</Link>
         </Col>
-        <Col span={3} offset={2}>
-          <Row justify="space-between" align="middle">
-            {auth && (
-              <>
-                <Col span={6}>
-                  <Row justify="center">
-                    <Button type="link" onClick={logoutHandleClick}>
-                      Log out
-                    </Button>
-                  </Row>
-                </Col>
+        <Col span={4}>
+          {auth && (
+            <MenuRowStyle justify="end">
+              {data && data.isAdmin && (
                 <Col>
-                  <Divider type="vertical" style={{ background: "#000" }} />
-                </Col>
-                <Col span={6}>
                   <Row justify="center">
-                    <Link to="/reserved">User</Link>
+                    <Link to="/admin/panel">Админ</Link>
                   </Row>
                 </Col>
-              </>
-            )}
-            {data && data.isAdmin && (
-              <>
-                <Col>
-                  <Divider type="vertical" style={{ background: "#000" }} />
-                </Col>
-                <Col span={6}>
-                  <Row justify="center">
-                    <Link to="/admin/panel">Admin</Link>
-                  </Row>
-                </Col>
-              </>
-            )}
-          </Row>
+              )}
+              <Col offset={2}>
+                <Row justify="center">
+                  <Link to="/reserved">Пользователь</Link>
+                </Row>
+              </Col>
+              <Col offset={2}>
+                <Row justify="center">
+                  <Link type="link" onClick={logoutHandleClick} to={""}>
+                    Выход
+                  </Link>
+                </Row>
+              </Col>
+            </MenuRowStyle>
+          )}
         </Col>
       </Row>
     </HeaderStyle>

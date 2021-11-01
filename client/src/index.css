@@ -21,13 +21,6 @@ code {
   margin: 0;
 }
 
-.App {
-  width: 425px;
-  margin: 0 auto;
-  background-color: white;
-  height: 100vh;
-}
-
 .bp3-popover2 {
   box-shadow: none !important;
 }

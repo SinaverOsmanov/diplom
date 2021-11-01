@@ -8,6 +8,7 @@ import {
   Select,
   Menu,
   Upload,
+  Card,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Switch, Route, Link, useLocation } from "react-router-dom";
@@ -18,6 +19,7 @@ import { RoomItemType } from "../common/models";
 import { Loading } from "../utils/loading";
 import { getRoomsThunkCreator } from "../store/reducers/roomsRedurers/getRoomsReducer";
 import { defaultValidateMessages } from "../utils/validateMessage";
+import { addRoomThunkCreator } from "./../store/reducers/roomReducers/addRoomReducer";
 const { Title } = Typography;
 
 export function AdminPage() {
@@ -89,7 +91,7 @@ type ValuesType = {
   title: string;
   description: string;
   quality: string;
-  upload: null | File[] | File;
+  upload: null | File[];
 };
 
 function AdminContentComponent({
@@ -118,21 +120,16 @@ function CreateRoomForm() {
   const dispatch = useDispatch();
 
   const onFinish = async (values: ValuesType) => {
-    debugger;
     const { title, description, quality, upload } = values;
-    const data = { title: title.trim() };
-    // if (upload) {
-    //   dispatch(
-    //     addRoomThunkCreator(title, description, quality, upload[0].name)
-    //   );
-    // }
+    debugger;
+    if (upload) {
+      dispatch(
+        addRoomThunkCreator(title, description, quality, upload[0].name)
+      );
+    }
   };
   const onReset = () => {
     form.resetFields();
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
   };
 
   const normFile = (e: any) => {
@@ -141,19 +138,6 @@ function CreateRoomForm() {
     }
     return e && e.fileList;
   };
-
-  // const validateMessages = {
-  //   required: "'${name}' Пожалуйста введите название комнаты!",
-  //   string: {
-  //     len: "'${name}' must be exactly ${len} characters",
-  //     min: "'${name}' must be at least ${min} characters",
-  //     max: "'${name}' cannot be longer than ${max} characters",
-  //     range: "'${name}' must be between ${min} and ${max} characters",
-  //   },
-  //   array: {
-
-  //   }
-  // };
 
   return (
     <Row>
@@ -170,7 +154,6 @@ function CreateRoomForm() {
         validateMessages={defaultValidateMessages}
         initialValues={{ remember: true }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
         onReset={onReset}
       >
@@ -190,10 +173,6 @@ function CreateRoomForm() {
             {
               min: 3,
               message: "Введите не меньше 3х символов",
-            },
-            {
-              pattern: new RegExp(/\d/g),
-              message: "В названии не должно быть чисел",
             },
           ]}
         >
