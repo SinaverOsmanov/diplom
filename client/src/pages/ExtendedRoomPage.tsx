@@ -14,11 +14,14 @@ import { RoomItemType, ValuesType } from "../common/models";
 import { useEffect, useState } from "react";
 import { Loading } from "../utils/loading";
 import { BadgeComponent } from "../components/BadgeComponent";
-import { getRoomByIdThunkCreator } from "../store/reducers/roomReducers/getRoomByIdReducer";
+import {
+  getRoomByIdThunkCreator,
+  updateRoomThunkCreator,
+} from "../store/reducers/roomReducers/getRoomByIdReducer";
 import { reservedRoomThunkCreator } from "../store/reducers/reservedReducers/reservedRoomReducer";
 import styled from "styled-components";
-import { updateRoomThunkCreator } from "./../store/reducers/roomReducers/updateRoomReducer";
 import { defaultValidateMessages } from "../utils/validateMessage";
+import { getDataLocalStorage } from "./../utils/localStorage";
 const { Title } = Typography;
 
 const ExtendedRowStyle = styled(Row)`
@@ -35,6 +38,8 @@ export function ExtendedRoomPage() {
   const [editRoom, setEditRoom] = useState(false);
   const room: RoomItemType = useSelector((state: any) => state.room.room);
   const loading = useSelector((state: any) => state.room.loading);
+
+  const data = getDataLocalStorage();
 
   const dispatch = useDispatch();
 
@@ -111,11 +116,13 @@ export function ExtendedRoomPage() {
                 </Col>
               </Row>
               <Row justify="end" style={{ alignSelf: "end" }}>
-                <Col>
-                  <Button type="ghost" onClick={() => setEditRoom(true)}>
-                    Редактировать
-                  </Button>
-                </Col>
+                {data && data.isAdmin && (
+                  <Col>
+                    <Button type="ghost" onClick={() => setEditRoom(true)}>
+                      Редактировать
+                    </Button>
+                  </Col>
+                )}
                 <Col>
                   <Button
                     type="primary"
@@ -246,5 +253,33 @@ export function UpdateRoomForm({
         </Form.Item>
       </Form>
     </Row>
+  );
+}
+
+function FormItemComponent({
+  value,
+  name,
+  label,
+  rules,
+  style,
+  children,
+}: {
+  value: string | number | [] | {};
+  name: string;
+  label: string;
+  rules: {}[];
+  style: {};
+  children: React.ReactNode;
+}) {
+  return (
+    <Form.Item
+      label={label}
+      name={name}
+      rules={rules}
+      initialValue={value}
+      style={style}
+    >
+      {children}
+    </Form.Item>
   );
 }

@@ -52,7 +52,7 @@ export function ContentComponent() {
           <Route path="/rooms/:roomId" component={ExtendedRoomPage} />
           <Route path="/rooms" component={RoomsPage} />
           <Route path="/reserved" component={UserRoomsPage} />
-          <Redirect to="/admin" />
+          <Redirect to="/" />
         </Routes>
       )}
     </ContentStyle>

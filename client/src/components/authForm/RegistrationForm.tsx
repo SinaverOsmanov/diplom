@@ -7,7 +7,6 @@ import { Input, Form } from "antd";
 export function RegistrationForm() {
   const dispatch = useDispatch();
   const onFinish = async (data: UserType) => {
-    debugger;
     dispatch(registrationUserThunkCreator(data));
   };
 
@@ -41,6 +40,9 @@ export function RegistrationForm() {
           rules={[
             {
               required: true,
+              message: "Пароль является обязательным",
+            },
+            {
               type: "string",
               whitespace: true,
             },
