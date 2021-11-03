@@ -1,8 +1,6 @@
-import { Row, Col, Button, Typography } from "antd";
+import { Row, Col, Typography } from "antd";
 import { useLocation, Link } from "react-router-dom";
-import styled from "styled-components";
 import { RoomItemType } from "../common/models";
-import { BadgeComponent } from "./BadgeComponent";
 import { getPathName } from "../utils/getPathName";
 import { RoomItem } from "./RoomItem";
 

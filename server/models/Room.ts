@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-import { ObjectId } from "mongodb";
 
 const RoomSchema = new mongoose.Schema(
   {
@@ -7,7 +6,7 @@ const RoomSchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: { type: String, required: true },
     quality: { type: String, required: true },
-    photoId: { type: mongoose.Schema.ObjectId || null, ref: "Image" },
+    photoUrl: { type: String || null, required: true },
     roomNumber: { type: Number, required: true },
     reserved: { type: mongoose.Schema.ObjectId || null, ref: "User" },
   },

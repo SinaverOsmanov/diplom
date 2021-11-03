@@ -18,10 +18,3 @@ export function convertBase(file: File) {
     };
   });
 }
-
-// async function uploadImg(file: any) {
-//   if (file) {
-//     const base64 = await convertBase(file);
-//     setImage({ imageUrl: base64 });
-//   }
-// }

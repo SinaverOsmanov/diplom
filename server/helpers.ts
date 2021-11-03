@@ -14,7 +14,7 @@ export type RoomRecord = {
   title: string;
   description: string;
   quality: string;
-  photo: string | null;
+  photoUrl: string | null;
   roomNumber: number;
   reserved: ObjectId | null;
 };

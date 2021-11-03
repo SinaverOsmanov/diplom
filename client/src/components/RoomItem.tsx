@@ -12,7 +12,7 @@ const { Title } = Typography;
 export function RoomItem({ room }: { room: RoomItemType }) {
   return (
     <Col key={room._id} span={6}>
-      <RoomItemStyle>
+      <RoomItemStyle bgUrl={room.photoUrl}>
         <Row align="top">
           <Col>
             <Title level={1}>{room.roomNumber}</Title>

@@ -41,7 +41,12 @@ type AddRoomType = {
 };
 
 export const addRoomThunkCreator =
-  (title: string, description: string, quality: string, file: string) =>
+  (
+    title: string,
+    description: string,
+    quality: string,
+    photoUrl: string | null
+  ) =>
   async (dispatch: any) => {
     try {
       dispatch({ type: ADD_ROOM_REQUEST });
@@ -50,11 +55,11 @@ export const addRoomThunkCreator =
         title,
         description,
         quality,
-        file,
+        photoUrl,
       });
 
       if (codeStatus === 201) {
-        const newRoom = { _id: roomId, description, quality, photo: "photo" };
+        const newRoom = { _id: roomId, description, quality, photoUrl };
         messageNotification({
           codeStatus: codeStatus,
           message: message,

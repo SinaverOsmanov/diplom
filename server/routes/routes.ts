@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import {
   RoomRecord,
-  uploadFiles,
   roomsMapObjectIdToString,
   UserRecord,
   userDto,
@@ -23,7 +22,7 @@ const router = express.Router();
 router.post("/registration", async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    const userCheck = await User.findOne({ email });
+    const userCheck = await User.findOne({ email }).lean();
     if (userCheck) {
       throw new Error(`${email} уже существует`);
     }
@@ -65,7 +64,7 @@ router.post("/login", async function (req: Request, res: Response) {
     const { email, password } = req.body;
     const user: UserRecord = await User.findOne({
       email: email,
-    });
+    }).lean();
     if (!user) {
       throw new Error(`Пользователь с таким ${email} не найден`);
     }
@@ -79,7 +78,7 @@ router.post("/login", async function (req: Request, res: Response) {
       ...userData,
     });
 
-    const isAdmin = await Admin.findOne({ userId: user._id });
+    const isAdmin = await Admin.findOne({ userId: user._id }).lean();
 
     await saveToken(userData.id, accessToken);
 
@@ -117,47 +116,48 @@ router.delete("/logout", async function (req: Request, res: Response) {
   }
 });
 
-router.post("/rooms/addRoom", async function (req: Request, res: Response) {
-  try {
-    const roomId = new ObjectId();
+router.post(
+  "/rooms/addRoom",
+  async function (req: Request, res: Response, next) {
+    try {
+      const roomId = new ObjectId();
+      const { title, description, quality, photoUrl } = req.body;
 
-    const { title, description, quality, file } = req.body;
-    const fileId = await uploadFiles(file);
-
-    const countDocuments = await Room.count();
-    const room = await Room.create({
-      _id: roomId,
-      title: title,
-      description: description,
-      quality: quality,
-      photoId: fileId || null,
-      roomNumber: countDocuments + 1,
-      reserved: null,
-    });
-    if (room) {
-      res.json({
-        data: {
-          roomId: room._id.toHexString(),
-          codeStatus: 201,
-          message: "Комната добавлена",
-        },
+      const countDocuments = await Room.count();
+      const room = await Room.create({
+        _id: roomId,
+        title: title,
+        description: description,
+        quality: quality,
+        photoUrl: photoUrl,
+        roomNumber: countDocuments + 1,
+        reserved: null,
       });
+      if (room) {
+        res.json({
+          data: {
+            roomId: room._id.toHexString(),
+            codeStatus: 201,
+            message: "Комната добавлена",
+          },
+        });
+      }
+    } catch (error: any) {
+      badRequestJSON(res, 400, error.message);
     }
-  } catch (error: any) {
-    badRequestJSON(res, 400, error.message);
   }
-});
+);
 
 router.patch(
   "/rooms/updateRoom/:id",
   async function (req: Request, res: Response) {
     try {
       const roomId = new ObjectId(req.params.id);
-      const { title, description, quality } = req.body;
+      const { title, description, quality, photoUrl } = req.body;
 
-      const updatedRoom = await Room.update(
+      const updatedRoom = await Room.updateOne(
         { _id: roomId },
-        { $set: { title, description, quality } }
+        { $set: { title, description, quality, photoUrl } }
       );
       if (updatedRoom) {
         res.json({
@@ -179,7 +179,7 @@ router.patch("/reservRoom", async function (req: Request, res: Response) {
     const { id: userId } = getTokenData(req.cookies);
     const { roomId } = req.body;
 
-    const findRoom = await Room.findOne({ _id: new ObjectId(roomId) });
+    const findRoom = await Room.findOne({ _id: new ObjectId(roomId) }).lean();
     if (!findRoom.reserved) {
       const result = await Room.updateOne(
         { _id: new ObjectId(roomId) },
@@ -209,7 +209,7 @@ router.patch("/unreservRoom", async function (req: Request, res: Response) {
   try {
     const { roomId } = req.body;
 
-    const findRoom = await Room.findOne({ _id: new ObjectId(roomId) });
+    const findRoom = await Room.findOne({ _id: new ObjectId(roomId) }).lean();
     if (findRoom.reserved) {
       const result = await Room.updateOne(
         { _id: new ObjectId(roomId) },
@@ -238,7 +238,7 @@ router.patch("/unreservRoom", async function (req: Request, res: Response) {
 router.get("/rooms/:id", async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const room = await Room.findOne({ _id: id });
+    const room = await Room.findOne({ _id: id }).lean();
 
     if (!room) {
       throw new Error("Комната не найдена");
@@ -252,41 +252,7 @@ router.get("/rooms/:id", async (req: Request, res: Response) => {
 
 router.get("/rooms", async (req: Request, res: Response) => {
   try {
-    const rooms: RoomRecord[] = await Room.aggregate([
-      {
-        $lookup: {
-          from: "images",
-          localField: "photoId",
-          foreignField: "_id",
-          as: "photo",
-        },
-      },
-      {
-        $group: {
-          _id: "$_id",
-          title: {
-            $first: "$title",
-          },
-          description: {
-            $first: "$description",
-          },
-          quality: {
-            $first: "$quality",
-          },
-          photo: {
-            $first: {
-              $arrayElemAt: ["$photo.image", 0],
-            },
-          },
-          roomNumber: {
-            $first: "$roomNumber",
-          },
-          reserved: {
-            $first: "$reserved",
-          },
-        },
-      },
-    ]);
+    const rooms: RoomRecord[] = await Room.find().lean();
     const mapRooms = roomsMapObjectIdToString(rooms);
     res.send({ data: { rooms: mapRooms, codeStatus: 200 } });
   } catch (error: any) {
@@ -297,46 +263,11 @@ router.get("/rooms", async (req: Request, res: Response) => {
 router.get("/userRooms", async (req: Request, res: Response) => {
   try {
     const { id: userId } = getTokenData(req.cookies);
-    const rooms: RoomRecord[] = await Room.aggregate([
-      {
-        $match: {
-          reserved: new ObjectId(userId),
-        },
-      },
-      {
-        $lookup: {
-          from: "images",
-          localField: "photoId",
-          foreignField: "_id",
-          as: "photo",
-        },
-      },
-      {
-        $group: {
-          _id: "$_id",
-          title: {
-            $first: "$title",
-          },
-          description: {
-            $first: "$description",
-          },
-          quality: {
-            $first: "$quality",
-          },
-          photo: {
-            $first: {
-              $arrayElemAt: ["$photo.image", 0],
-            },
-          },
-          roomNumber: {
-            $first: "$roomNumber",
-          },
-          reserved: {
-            $first: "$reserved",
-          },
-        },
-      },
-    ]);
+
+    const rooms: RoomRecord[] = await Room.find({
+      reserved: new ObjectId(userId),
+    }).lean();
+
     const mapRooms = roomsMapObjectIdToString(rooms);
     res.send({ data: { rooms: mapRooms, codeStatus: 200 } });
   } catch (error: any) {
@@ -346,46 +277,9 @@ router.get("/userRooms", async (req: Request, res: Response) => {
 
 router.get("/unreservedRooms", async (req: Request, res: Response) => {
   try {
-    const rooms: RoomRecord[] = await Room.aggregate([
-      {
-        $match: {
-          reserved: null,
-        },
-      },
-      {
-        $lookup: {
-          from: "images",
-          localField: "photoId",
-          foreignField: "_id",
-          as: "photo",
-        },
-      },
-      {
-        $group: {
-          _id: "$_id",
-          title: {
-            $first: "$title",
-          },
-          description: {
-            $first: "$description",
-          },
-          quality: {
-            $first: "$quality",
-          },
-          photo: {
-            $first: {
-              $arrayElemAt: ["$photo.image", 0],
-            },
-          },
-          roomNumber: {
-            $first: "$roomNumber",
-          },
-          reserved: {
-            $first: "$reserved",
-          },
-        },
-      },
-    ]);
+    const rooms: RoomRecord[] = await Room.find({
+      reserved: null,
+    }).lean();
     const mapRooms = roomsMapObjectIdToString(rooms);
     res.send({ data: { rooms: mapRooms, codeStatus: 200 } });
   } catch (error: any) {

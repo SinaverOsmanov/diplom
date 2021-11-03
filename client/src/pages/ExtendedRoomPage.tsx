@@ -1,27 +1,15 @@
-import {
-  Button,
-  Col,
-  Input,
-  Select,
-  Form,
-  Row,
-  Typography,
-  Upload,
-} from "antd";
+import { Button, Col, Row, Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { RoomItemType, ValuesType } from "../common/models";
+import { RoomItemType } from "../common/models";
 import { useEffect, useState } from "react";
 import { Loading } from "../utils/loading";
 import { BadgeComponent } from "../components/BadgeComponent";
-import {
-  getRoomByIdThunkCreator,
-  updateRoomThunkCreator,
-} from "../store/reducers/roomReducers/getRoomByIdReducer";
+import { getRoomByIdThunkCreator } from "../store/reducers/roomReducers/getRoomByIdReducer";
 import { reservedRoomThunkCreator } from "../store/reducers/reservedReducers/reservedRoomReducer";
 import styled from "styled-components";
-import { defaultValidateMessages } from "../utils/validateMessage";
 import { getDataLocalStorage } from "./../utils/localStorage";
+import { UpdateRoomForm } from "../components/roomForm/UpdateRoomForm";
 const { Title } = Typography;
 
 const ExtendedRowStyle = styled(Row)`
@@ -43,12 +31,12 @@ export function ExtendedRoomPage() {
 
   const dispatch = useDispatch();
 
-  async function reservedClickHandler(id: string) {
-    dispatch(reservedRoomThunkCreator(id, "reserv"));
-  }
-
-  async function unReservedClickHandler(id: string) {
-    dispatch(reservedRoomThunkCreator(id, "unreserv"));
+  async function isReserved(id: string, reserved: boolean) {
+    if (reserved) {
+      dispatch(reservedRoomThunkCreator(id, "unreserv"));
+    } else {
+      dispatch(reservedRoomThunkCreator(id, "reserv"));
+    }
   }
 
   useEffect(() => {
@@ -72,12 +60,11 @@ export function ExtendedRoomPage() {
               width: "100%",
               height: "100%",
 
-              background:
-                "url(https://source.unsplash.com/random) center center / cover no-repeat",
+              background: `url(${room.photoUrl}) center center / cover no-repeat`,
               // backgroundImage: `url(${room.photo})`,
             }}
           >
-            <span>{room.photo}</span>
+            {!room.photoUrl && <span>no photo</span>}
           </div>
         </Col>
         <Col
@@ -128,9 +115,7 @@ export function ExtendedRoomPage() {
                     type="primary"
                     danger={room.reserved === null ? false : true}
                     onClick={() =>
-                      room.reserved
-                        ? unReservedClickHandler(room._id)
-                        : reservedClickHandler(room._id)
+                      isReserved(room._id, room.reserved ? true : false)
                     }
                   >
                     {room.reserved !== null
@@ -144,142 +129,5 @@ export function ExtendedRoomPage() {
         </Col>
       </ExtendedRowStyle>
     </>
-  );
-}
-
-export function UpdateRoomForm({
-  room,
-  closeEditRoom,
-}: {
-  room: RoomItemType;
-  closeEditRoom(bool: boolean): void;
-}) {
-  const dispatch = useDispatch();
-
-  const onFinish = async (values: ValuesType) => {
-    const { title, description, quality } = values;
-
-    dispatch(
-      updateRoomThunkCreator({
-        roomId: room._id,
-        title,
-        description,
-        quality,
-      })
-    );
-    closeEditRoom(false);
-  };
-
-  return (
-    <Row style={{ height: "100%" }}>
-      <Form
-        style={{
-          justifyContent: "space-between",
-          display: "flex",
-          flexDirection: "column",
-          flex: "1 0 0",
-        }}
-        layout="vertical"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 10 }}
-        validateMessages={defaultValidateMessages}
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        autoComplete="off"
-      >
-        <Row>
-          <Col flex={1}>
-            <Form.Item
-              label="Название"
-              name="title"
-              initialValue={room.title}
-              rules={[
-                {
-                  whitespace: true,
-                  message: "Не оставляйте пустые поля",
-                },
-                {
-                  type: "string",
-                  required: true,
-                  message: "Поле название является обязательным",
-                },
-                {
-                  min: 3,
-                  message: "Введите не меньше 3х символов",
-                },
-              ]}
-            >
-              <Input name="title" />
-            </Form.Item>
-            <Form.Item
-              label="Описание"
-              name="description"
-              initialValue={room.description}
-              rules={[{ required: true }]}
-            >
-              <Input.TextArea name="description" />
-            </Form.Item>
-            <Form.Item
-              label="Комфортабельность"
-              name="quality"
-              rules={[{ required: true }]}
-              initialValue={room.quality}
-            >
-              <Select placeholder="Выберите качество комнаты">
-                <Select.Option value="economy">Эконом</Select.Option>
-                <Select.Option value="standart">Стандарт</Select.Option>
-                <Select.Option value="lux">Люкс</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.Item
-          wrapperCol={{ offset: 8, span: 16 }}
-          style={{
-            alignContent: "flex-end",
-            margin: 0,
-          }}
-        >
-          <Button
-            type="primary"
-            htmlType="button"
-            onClick={() => closeEditRoom(false)}
-          >
-            Отменить
-          </Button>
-          <Button type="primary" htmlType="submit">
-            Сохранить
-          </Button>
-        </Form.Item>
-      </Form>
-    </Row>
-  );
-}
-
-function FormItemComponent({
-  value,
-  name,
-  label,
-  rules,
-  style,
-  children,
-}: {
-  value: string | number | [] | {};
-  name: string;
-  label: string;
-  rules: {}[];
-  style: {};
-  children: React.ReactNode;
-}) {
-  return (
-    <Form.Item
-      label={label}
-      name={name}
-      rules={rules}
-      initialValue={value}
-      style={style}
-    >
-      {children}
-    </Form.Item>
   );
 }

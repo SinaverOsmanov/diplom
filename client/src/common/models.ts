@@ -5,7 +5,7 @@ export type RoomItemType = {
   title: string;
   description: string;
   quality: string;
-  photo: string | null;
+  photoUrl: string | null;
   roomNumber: number;
   reserved: string | null;
 };
@@ -51,5 +51,5 @@ export type ValuesType = {
   title: string;
   description: string;
   quality: string;
-  upload: null | File[];
+  photoUrl: string | null;
 };

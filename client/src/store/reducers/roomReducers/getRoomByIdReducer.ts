@@ -61,6 +61,7 @@ export const updateRoomAction = (payload: {
   title: string;
   description: string;
   quality: string;
+  photoUrl: string | null;
 }) => ({
   type: GET_ROOM_SUCCESS,
   payload: payload,
@@ -72,11 +73,13 @@ export const updateRoomThunkCreator =
     title,
     description,
     quality,
+    photoUrl,
   }: {
     roomId: string;
     title: string;
     description: string;
     quality: string;
+    photoUrl: string | null;
   }) =>
   async (dispatch: any) => {
     try {
@@ -86,14 +89,14 @@ export const updateRoomThunkCreator =
         codeStatus,
         message,
       }: { room: RoomItemType; codeStatus: number; message: string } =
-        await updateRoomAPI({ roomId, title, description, quality });
+        await updateRoomAPI({ roomId, title, description, quality, photoUrl });
 
       if (codeStatus === 202) {
         messageNotification({
           codeStatus: codeStatus,
           message: message,
         });
-        dispatch(updateRoomAction({ title, description, quality }));
+        dispatch(updateRoomAction({ title, description, quality, photoUrl }));
       }
     } catch (error) {
       dispatch({ type: GET_ROOM_FAIL });

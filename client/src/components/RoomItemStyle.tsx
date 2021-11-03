@@ -23,12 +23,12 @@ export const RoomItemStyle = styled.div`
   justify-content: space-between;
   color: #fff;
   height: 200px;
-  background: rgb(149 155 164 / 70%);
   border-radius: 5px;
+  background-color: rgb(149 155 164 / 70%);
   box-shadow: 3px 4px 4px 0px rgb(0 0 0 / 19%);
   width: 100%;
-  background: url(https://source.unsplash.com/random) center center / cover
-    no-repeat;
+  background: url(${({ bgUrl }: { bgUrl: string | null }) => bgUrl}) center
+    center / cover no-repeat;
   position: relative;
   justify-content: space-between;
   padding: 10px;
@@ -37,13 +37,29 @@ export const RoomItemStyle = styled.div`
     color: #fff;
     font-size: 70px;
     letter-spacing: -12px;
+    z-index: 2;
+    position: relative;
   }
 
   div:first-child {
     justify-content: space-between;
   }
 
-  div {
+  & > div {
     justify-content: center;
+    z-index: 2;
+    position: relative;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    z-index: 1;
   }
 `;

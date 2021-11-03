@@ -18,6 +18,7 @@ server.use(
     methods: ["POST", "GET", "PATCH", "DELETE"],
   })
 );
+
 server.use("/api", router);
 
 const start = async () => {

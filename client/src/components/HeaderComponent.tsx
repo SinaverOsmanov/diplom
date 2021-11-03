@@ -2,7 +2,7 @@ import { Row, Col, Layout } from "antd";
 import { Link } from "react-router-dom";
 import { getDataLocalStorage } from "../utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router-dom";
 import { logoutUserThunkCreator } from "../store/reducers/userReducers/logoutUserReducer";
 import styled from "styled-components";
 const { Header } = Layout;

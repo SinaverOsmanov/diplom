@@ -23,12 +23,6 @@ export async function saveToken(userId: ObjectId, accessToken: string) {
   return token;
 }
 
-type tokenType = {
-  _id: ObjectId;
-  user: ObjectId;
-  accessToken: string;
-};
-
 export function validateAccessToken(token: string) {
   try {
     if (process.env.JWT_ACCESS_TOKEN) {
