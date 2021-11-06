@@ -35,8 +35,6 @@ export const RoomItemStyle = styled.div`
 
   h1 {
     color: #fff;
-    font-size: 70px;
-    letter-spacing: -12px;
     z-index: 2;
     position: relative;
   }

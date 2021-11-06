@@ -18,6 +18,6 @@ export const ExtendedRowStyle = styled(Row)`
   border-radius: 5px;
   box-shadow: 3px 4px 4px 0px rgb(0 0 0 / 19%);
   overflow: hidden;
-  height: 450px;
+  min-height: 450px;
   justify-content: space-between;
 `;

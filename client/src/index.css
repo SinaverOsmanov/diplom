@@ -21,6 +21,13 @@ code {
   margin: 0;
 }
 
+h1 {
+  font-size: 70px !important;
+  letter-spacing: -12px;
+  position: absolute;
+  top: -30px;
+}
+
 .bp3-popover2 {
   box-shadow: none !important;
 }

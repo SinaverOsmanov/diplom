@@ -65,20 +65,31 @@ export function ExtendedRoomPage() {
             />
           ) : (
             <>
-              <Row style={{ alignSelf: "start" }}>
-                <Col>
+              <Row>
+                <Col flex={1}>
                   <Row
                     style={{
                       fontSize: "15px",
                       fontWeight: "bold",
                     }}
+                    justify="space-between"
                   >
-                    <Title level={4}>
-                      Название комнаты:
-                      <span style={{ fontSize: "30px" }}> {room.title}</span>
-                    </Title>
+                    <Col span={20}>
+                      <Title level={4}>
+                        Название комнаты:
+                        <span style={{ fontSize: "30px" }}> {room.title}</span>
+                      </Title>
+                    </Col>
+                    <Col span={2} offset={2}>
+                      <Row
+                        justify="center"
+                        align="top"
+                        style={{ position: "relative" }}
+                      >
+                        <Title level={1}>{room.roomNumber}</Title>
+                      </Row>
+                    </Col>
                   </Row>
-                  <Row>Номер комнаты: {room.roomNumber}</Row>
                   <Row align="middle">
                     <Col>
                       <span>Качество комнаты:</span>
