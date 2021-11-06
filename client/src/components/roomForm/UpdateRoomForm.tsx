@@ -7,9 +7,11 @@ import { RoomForm } from "../RoomFormComponent";
 export function UpdateRoomForm({
   room,
   closeEditRoom,
+  buttonSumbitTitle,
 }: {
   room: RoomItemType;
   closeEditRoom(bool: boolean): void;
+  buttonSumbitTitle: string;
 }) {
   const dispatch = useDispatch();
   const onFinish = async (values: ValuesType) => {
@@ -27,7 +29,11 @@ export function UpdateRoomForm({
   };
 
   return (
-    <RoomForm initial={room} onFinish={onFinish}>
+    <RoomForm
+      initial={room}
+      onFinish={onFinish}
+      buttonSumbitTitle={buttonSumbitTitle}
+    >
       <Button
         type="primary"
         htmlType="button"

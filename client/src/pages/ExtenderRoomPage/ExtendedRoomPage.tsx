@@ -58,7 +58,11 @@ export function ExtendedRoomPage() {
           }}
         >
           {editRoom ? (
-            <UpdateRoomForm room={room} closeEditRoom={setEditRoom} />
+            <UpdateRoomForm
+              room={room}
+              closeEditRoom={setEditRoom}
+              buttonSumbitTitle="Сохранить"
+            />
           ) : (
             <>
               <Row style={{ alignSelf: "start" }}>

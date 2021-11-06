@@ -6,10 +6,12 @@ export function RoomForm({
   initial,
   onFinish,
   children,
+  buttonSumbitTitle,
 }: {
   initial?: ValuesType;
   onFinish(values: ValuesType): void;
   children?: React.ReactNode;
+  buttonSumbitTitle?: string;
 }) {
   return (
     <Row style={{ height: "100%" }}>
@@ -102,7 +104,7 @@ export function RoomForm({
         >
           {children}
           <Button type="primary" htmlType="submit">
-            Создать комнату
+            {buttonSumbitTitle || "Создать"}
           </Button>
         </Form.Item>
       </Form>
