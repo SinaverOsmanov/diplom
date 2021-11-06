@@ -11,8 +11,9 @@ const { Title } = Typography;
 
 export function AdminPage() {
   const style = {
-    background: "#ccc",
+    background: "#d4d4d4",
     padding: "20px 0px",
+    boxShadow: "0px 0px 5px 2px rgb(0 0 0 / 19%)",
   };
   const { pathname } = useLocation();
   const { rooms, loading } = useGetRooms(getRoomsThunkCreator);

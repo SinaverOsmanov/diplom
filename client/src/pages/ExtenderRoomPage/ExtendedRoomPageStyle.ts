@@ -14,7 +14,7 @@ export const ExtendedPhotoStyle = styled.div`
 `;
 
 export const ExtendedRowStyle = styled(Row)`
-  background: rgb(149 155 164 / 70%);
+  background: #fff;
   border-radius: 5px;
   box-shadow: 3px 4px 4px 0px rgb(0 0 0 / 19%);
   overflow: hidden;

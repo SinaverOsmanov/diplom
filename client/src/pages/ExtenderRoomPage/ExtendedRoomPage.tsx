@@ -79,9 +79,13 @@ export function ExtendedRoomPage() {
                     </Title>
                   </Row>
                   <Row>Номер комнаты: {room.roomNumber}</Row>
-                  <Row>
-                    <span>Уровень комнаты: </span>
-                    <BadgeComponent quality={room.quality} />
+                  <Row align="middle">
+                    <Col>
+                      <span>Качество комнаты:</span>
+                    </Col>
+                    <Col offset={1}>
+                      <BadgeComponent quality={room.quality} />
+                    </Col>
                   </Row>
                   <Row>Описание: {room.description}</Row>
                 </Col>
