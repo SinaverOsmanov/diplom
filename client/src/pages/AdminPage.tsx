@@ -6,7 +6,7 @@ import { Loading } from "../utils/loading";
 import { getRoomsThunkCreator } from "../store/reducers/roomsRedurers/getRoomsReducer";
 import { useGetRooms } from "../customHooks/useGetRooms";
 import { CreateRoomForm } from "../components/roomForm/CreateRoomForm";
-import { AdminContent } from "../components/AdminContent";
+import { AdminContent } from "../layouts/AdminContent";
 const { Title } = Typography;
 
 export function AdminPage() {
@@ -64,14 +64,7 @@ export function AdminPage() {
           </Route>
           <Route path="/admin/create">
             <AdminContent title={"Создание комнаты"}>
-              <CreateRoomForm
-                initial={{
-                  title: "",
-                  description: "",
-                  quality: "standart",
-                  photoUrl: null,
-                }}
-              />
+              <CreateRoomForm />
             </AdminContent>
           </Route>
         </Switch>

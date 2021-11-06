@@ -47,9 +47,4 @@ export type DefaultStateAuthType = {
 
 export type getApiRoomsType = { rooms: RoomItemType[]; codeStatus: number };
 
-export type ValuesType = {
-  title: string;
-  description: string;
-  quality: string;
-  photoUrl: string | null;
-};
+export type ValuesType = Omit<RoomItemType, "_id" | "roomNumber" | "reserved">;

@@ -39,10 +39,6 @@ export const getRoomsAction = (payload: RoomItemType[]) => ({
   type: GET_ROOMS_SUCCESS,
   payload: payload,
 });
-// export const getFailRoomsAction = (payload: any) => ({
-//   type: GET_ROOMS_FAIL,
-//   payload: payload,
-// });
 
 export const getRoomsThunkCreator = () => async (dispatch: any) => {
   try {

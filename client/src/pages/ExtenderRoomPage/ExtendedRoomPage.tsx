@@ -1,25 +1,16 @@
 import { Button, Col, Row, Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { RoomItemType } from "../common/models";
+import { RoomItemType } from "../../common/models";
 import { useEffect, useState } from "react";
-import { Loading } from "../utils/loading";
-import { BadgeComponent } from "../components/BadgeComponent";
-import { getRoomByIdThunkCreator } from "../store/reducers/roomReducers/getRoomByIdReducer";
-import { reservedRoomThunkCreator } from "../store/reducers/reservedReducers/reservedRoomReducer";
-import styled from "styled-components";
-import { getDataLocalStorage } from "./../utils/localStorage";
-import { UpdateRoomForm } from "../components/roomForm/UpdateRoomForm";
+import { Loading } from "../../utils/loading";
+import { BadgeComponent } from "../../layouts/BadgeComponent";
+import { getRoomByIdThunkCreator } from "../../store/reducers/roomReducers/getRoomByIdReducer";
+import { reservedRoomThunkCreator } from "../../store/reducers/reservedReducers/reservedRoomReducer";
+import { getDataLocalStorage } from "../../utils/localStorage";
+import { UpdateRoomForm } from "../../components/roomForm/UpdateRoomForm";
+import { ExtendedPhotoStyle, ExtendedRowStyle } from "./ExtendedRoomPageStyle";
 const { Title } = Typography;
-
-const ExtendedRowStyle = styled(Row)`
-  background: rgb(149 155 164 / 70%);
-  border-radius: 5px;
-  box-shadow: 3px 4px 4px 0px rgb(0 0 0 / 19%);
-  overflow: hidden;
-  height: 450px;
-  justify-content: space-between;
-`;
 
 export function ExtendedRoomPage() {
   let { roomId }: { roomId: string } = useParams();
@@ -51,24 +42,13 @@ export function ExtendedRoomPage() {
     <>
       <Title level={3}>Описание номера</Title>
       <ExtendedRowStyle>
-        <Col span={7}>
-          <div
-            style={{
-              alignItems: "center",
-              textAlign: "center",
-              lineHeight: "13em",
-              width: "100%",
-              height: "100%",
-
-              background: `url(${room.photoUrl}) center center / cover no-repeat`,
-              // backgroundImage: `url(${room.photo})`,
-            }}
-          >
+        <Col span={8}>
+          <ExtendedPhotoStyle bgUrl={room.photoUrl}>
             {!room.photoUrl && <span>no photo</span>}
-          </div>
+          </ExtendedPhotoStyle>
         </Col>
         <Col
-          span={16}
+          span={15}
           offset={1}
           style={{
             padding: "20px 20px 20px 0",
@@ -78,10 +58,7 @@ export function ExtendedRoomPage() {
           }}
         >
           {editRoom ? (
-            <UpdateRoomForm
-              room={room}
-              closeEditRoom={() => setEditRoom(false)}
-            />
+            <UpdateRoomForm room={room} closeEditRoom={setEditRoom} />
           ) : (
             <>
               <Row style={{ alignSelf: "start" }}>
@@ -92,7 +69,10 @@ export function ExtendedRoomPage() {
                       fontWeight: "bold",
                     }}
                   >
-                    Название комнаты: {room.title}
+                    <Title level={4}>
+                      Название комнаты:
+                      <span style={{ fontSize: "30px" }}> {room.title}</span>
+                    </Title>
                   </Row>
                   <Row>Номер комнаты: {room.roomNumber}</Row>
                   <Row>

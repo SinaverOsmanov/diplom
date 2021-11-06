@@ -2,10 +2,10 @@ import React from "react";
 import { Col } from "antd";
 import { RoomItemType } from "../common/models";
 import { Row } from "antd";
-import { BadgeComponent } from "./BadgeComponent";
 import { Button, Typography } from "antd";
 import { Link } from "react-router-dom";
 import { RoomItemStyle } from "./RoomItemStyle";
+import { BadgeComponent } from "../layouts/BadgeComponent";
 
 const { Title } = Typography;
 
@@ -21,10 +21,6 @@ export function RoomItem({ room }: { room: RoomItemType }) {
             <BadgeComponent quality={room.quality} />
           </Col>
         </Row>
-        {/* <Row>{room.title}</Row>
-        <Row style={{ lineHeight: 1, overflow: "hidden", height: "2em" }}>
-          {room.description}
-        </Row> */}
         <Row>
           <Col span={12}>
             <Button type="primary" block>

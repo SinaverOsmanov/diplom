@@ -1,30 +1,21 @@
 import { useEffect } from "react";
-import { Layout } from "antd";
-import { Routes } from "./Routes";
 import { Route, Redirect } from "react-router-dom";
-import { LoginForm } from "./authForm/LoginForm";
-import { RegistrationForm } from "./authForm/RegistrationForm";
-import { AdminPage } from "../pages/AdminPage";
-import { ExtendedRoomPage } from "../pages/ExtendedRoomPage";
-import { RoomsPage } from "../pages/RoomsPage";
-import { UserRoomsPage } from "../pages/UserRoomsPage";
+import { LoginForm } from "../authForm/LoginForm";
+import { RegistrationForm } from "../authForm/RegistrationForm";
+import { AdminPage } from "../../pages/AdminPage";
+import { ExtendedRoomPage } from "../../pages/ExtenderRoomPage/ExtendedRoomPage";
+import { RoomsPage } from "../../pages/RoomsPage";
+import { UserRoomsPage } from "../../pages/UserRoomsPage";
 import { useDispatch, useSelector } from "react-redux";
-import { getDataLocalStorage } from "./../utils/localStorage";
-import { AUTH_USER_SUCCESS } from "./../store/types/types";
-import styled from "styled-components";
+import { getDataLocalStorage } from "../../utils/localStorage";
+import { AUTH_USER_SUCCESS } from "../../store/types/types";
 import { useHistory, useLocation } from "react-router";
-
-const { Content } = Layout;
-
-const ContentStyle = styled(Content)`
-  width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  height: calc(100vh - 64px);
-`;
+import { ContentStyle } from "./ContentComponentStyle";
+import { Routes } from "../../layouts/Routes";
 
 export function ContentComponent() {
   const { auth } = useSelector((state: any) => state.auth);
+
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const history = useHistory();

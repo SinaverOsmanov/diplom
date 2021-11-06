@@ -6,7 +6,7 @@ const RoomSchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: { type: String, required: true },
     quality: { type: String, required: true },
-    photoUrl: { type: String || null, required: true },
+    photoUrl: { type: String || null },
     roomNumber: { type: Number, required: true },
     reserved: { type: mongoose.Schema.ObjectId || null, ref: "User" },
   },

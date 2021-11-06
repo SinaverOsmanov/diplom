@@ -2,10 +2,13 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import { config } from "./config/config";
+import path from "path";
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const router = require("./routes/routes");
 const server = express();
+
+server.use(express.static(path.resolve(__dirname, "public")));
 
 server.use(bodyParser.json({ limit: "50mb" }));
 server.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
