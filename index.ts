@@ -10,7 +10,7 @@ const server = express();
 
 const port = process.env.PORT || 8080;
 
-server.use(express.static(path.resolve(__dirname, "public")));
+server.use(express.static(path.resolve(__dirname, "client/public")));
 
 server.use(bodyParser.json({ limit: "50mb" }));
 server.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
@@ -27,10 +27,10 @@ server.use(
 server.use("/api", router);
 
 if (process.env.NODE_ENV === "production") {
-  server.use(express.static(path.resolve(__dirname, "../client/build")));
+  server.use(express.static(path.resolve(__dirname, "client/build")));
 
   server.get("*", (req: any, res: any) => {
-    res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
 
