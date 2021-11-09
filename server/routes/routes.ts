@@ -159,6 +159,7 @@ router.patch(
         { _id: roomId },
         { $set: { title, description, quality, photoUrl } }
       );
+
       if (updatedRoom) {
         res.json({
           data: {
@@ -210,6 +211,7 @@ router.patch("/unreservRoom", async function (req: Request, res: Response) {
     const { roomId } = req.body;
 
     const findRoom = await Room.findOne({ _id: new ObjectId(roomId) }).lean();
+
     if (findRoom.reserved) {
       const result = await Room.updateOne(
         { _id: new ObjectId(roomId) },

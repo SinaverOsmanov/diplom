@@ -1,12 +1,14 @@
-import express from "express";
-import cors from "cors";
-import mongoose from "mongoose";
-import { config } from "./config/config";
-import path from "path";
+const config = require("./config/config");
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const path = require("path");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const router = require("./routes/routes");
 const server = express();
+
+const port = process.env.PORT || 8080;
 
 server.use(express.static(path.resolve(__dirname, "public")));
 
@@ -15,7 +17,7 @@ server.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 server.use(cookieParser());
 server.use(
   cors({
-    origin: config.clientUrl,
+    origin: process.env.CLIENT_URL || config.clientUrl,
     credentials: true,
     allowedHeaders: "Content-Type",
     methods: ["POST", "GET", "PATCH", "DELETE"],
@@ -24,11 +26,19 @@ server.use(
 
 server.use("/api", router);
 
+if (process.env.NODE_ENV === "production") {
+  server.use(express.static(path.resolve(__dirname, "../client/build")));
+
+  server.get("*", (req: any, res: any) => {
+    res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
+  });
+}
+
 const start = async () => {
   try {
-    await mongoose.connect(config.mongoUrl);
-    server.listen(config.port, () => {
-      console.log(`Example app listening at http://localhost:${config.port}`);
+    await mongoose.connect(process.env.MONGO_URL || config.mongoUrl);
+    server.listen(port, () => {
+      console.log(`Example app listening at http://localhost:${port}`);
     });
   } catch (error) {
     console.log(error);
