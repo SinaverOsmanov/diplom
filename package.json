@@ -5,11 +5,11 @@
   "main": "index.js",
   "types": "typings/index.d.ts",
   "scripts": {
-    "dev": "concurrently --kill-others \"nodemon index.ts\" \"cd ../client && yarn start\"",
+    "dev": "concurrently --kill-others \"nodemon index.ts\" \"cd client && yarn start\"",
     "start": "nodemon index.ts",
     "heroku-postbuild": "yarn install-client && yarn build",
-    "build": "cd ../client && yarn build",
-    "install-client": "cd ../client && yarn install"
+    "build": "cd client && yarn build",
+    "install-client": "cd client && yarn install"
   },
   "keywords": [],
   "author": "",
