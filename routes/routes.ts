@@ -14,7 +14,7 @@ import { generateWebTokens, saveToken } from "./../service/token";
 import { Token } from "./../models/Token";
 import { Admin } from "./../models/Admin";
 import { Error } from "mongoose";
-const { ObjectId } = require("mongodb");
+import { ObjectId } from "mongodb";
 
 // ROUTES
 const router = express.Router();
