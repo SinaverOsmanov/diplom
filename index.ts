@@ -27,10 +27,10 @@ server.use(
 server.use("/api", router);
 
 if (process.env.NODE_ENV === "production") {
-  server.use(express.static(path.resolve(__dirname, "client/build")));
+  server.use(express.static(path.join(__dirname, "/client")));
 
   server.get("*", (req: any, res: any) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    res.sendFile(path.join(__dirname, "/client/build", "index.html"));
   });
 }
 

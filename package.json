@@ -9,10 +9,8 @@
   },
   "scripts": {
     "dev": "concurrently --kill-others \"nodemon index.ts\" \"cd client && yarn start\"",
-    "start": "ts-node ./index.ts",
-    "heroku-postbuild": "yarn install-client && yarn build",
-    "build": "cd client && yarn build",
-    "install-client": "cd client && yarn install"
+    "start": "ts-node index.ts",
+    "heroku-postbuild": "cd client && yarn install && yarn build"
   },
   "keywords": [],
   "author": "",
