@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "14.17.6",
+    "ts-node": "10.4.0",
+    "yarn": "1.21.1",
+    "npm": "6.14.15"
+  },
   "scripts": {
     "dev": "concurrently --kill-others \"nodemon -x ts-node index.ts\" \"cd client && yarn start\"",
     "start": "ts-node index.ts",
