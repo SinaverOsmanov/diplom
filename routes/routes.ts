@@ -7,7 +7,6 @@ import {
   getTokenData,
   badRequestJSON,
 } from "../helpers";
-import { ObjectId } from "mongodb";
 import { Room } from "./../models/Room";
 import { User } from "./../models/User";
 import bcrypt from "bcrypt";
@@ -15,6 +14,7 @@ import { generateWebTokens, saveToken } from "./../service/token";
 import { Token } from "./../models/Token";
 import { Admin } from "./../models/Admin";
 import { Error } from "mongoose";
+const { ObjectId } = require("mongodb");
 
 // ROUTES
 const router = express.Router();
