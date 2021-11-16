@@ -34,7 +34,7 @@ export const addRoomAction = (payload: any) => ({
   payload: payload,
 });
 
-type AddRoomType = {
+type roomResponseType = {
   roomId: string;
   codeStatus: number;
   message: string;
@@ -51,12 +51,13 @@ export const addRoomThunkCreator =
     try {
       dispatch({ type: ADD_ROOM_REQUEST });
 
-      const { roomId, codeStatus, message }: AddRoomType = await addRoomAPI({
-        title,
-        description,
-        quality,
-        photoUrl,
-      });
+      const { roomId, codeStatus, message }: roomResponseType =
+        await addRoomAPI({
+          title,
+          description,
+          quality,
+          photoUrl,
+        });
 
       if (codeStatus === 201) {
         const newRoom = { _id: roomId, description, quality, photoUrl };

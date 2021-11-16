@@ -1,4 +1,4 @@
-import { UserType } from "../common/models";
+import { addRoomType, UserType } from "../common/models";
 
 async function apiRequest(
   path: string,
@@ -18,12 +18,6 @@ async function apiRequest(
   const { data } = await response.json();
   return data;
 }
-export type addRoomType = {
-  title: string;
-  description: string;
-  quality: string;
-  photoUrl: string | null;
-};
 
 export async function addRoomAPI({
   title,
