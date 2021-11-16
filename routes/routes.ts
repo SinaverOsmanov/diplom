@@ -116,37 +116,34 @@ router.delete("/logout", async function (req: Request, res: Response) {
   }
 });
 
-router.post(
-  "/rooms/addRoom",
-  async function (req: Request, res: Response, next) {
-    try {
-      const roomId = new ObjectId();
-      const { title, description, quality, photoUrl } = req.body;
+router.post("/rooms/addRoom", async function (req: Request, res: Response) {
+  try {
+    const roomId = new ObjectId();
+    const { title, description, quality, photoUrl } = req.body;
 
-      const countDocuments = await Room.count();
-      const room = await Room.create({
-        _id: roomId,
-        title: title,
-        description: description,
-        quality: quality,
-        photoUrl: photoUrl,
-        roomNumber: countDocuments + 1,
-        reserved: null,
+    const countDocuments = await Room.count();
+    const room = await Room.create({
+      _id: roomId,
+      title: title,
+      description: description,
+      quality: quality,
+      photoUrl: photoUrl,
+      roomNumber: countDocuments + 1,
+      reserved: null,
+    });
+    if (room) {
+      res.json({
+        data: {
+          roomId: room._id.toHexString(),
+          codeStatus: 201,
+          message: "Комната добавлена",
+        },
       });
-      if (room) {
-        res.json({
-          data: {
-            roomId: room._id.toHexString(),
-            codeStatus: 201,
-            message: "Комната добавлена",
-          },
-        });
-      }
-    } catch (error: any) {
-      badRequestJSON(res, 400, error.message);
     }
+  } catch (error: any) {
+    badRequestJSON(res, 400, error.message);
   }
-);
+});
 
 router.patch(
   "/rooms/updateRoom/:id",
