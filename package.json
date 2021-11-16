@@ -8,7 +8,7 @@
     "yarn": "1.21.x"
   },
   "scripts": {
-    "dev": "concurrently --kill-others \"nodemon index.ts\" \"cd client && yarn start\"",
+    "dev": "concurrently --kill-others \"nodemon -x ts-node index.ts\" \"cd client && yarn start\"",
     "start": "ts-node index.ts",
     "heroku-postbuild": "cd client && yarn install && yarn build"
   },
