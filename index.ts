@@ -15,7 +15,7 @@ server.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 server.use(cookieParser());
 server.use(
   cors({
-    origin: process.env.CLIENT_URL || config.clientUrl,
+    origin: "*",
     credentials: true,
     allowedHeaders: "Content-Type",
     methods: ["POST", "GET", "PATCH", "DELETE"],
