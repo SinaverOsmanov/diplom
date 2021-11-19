@@ -17,8 +17,8 @@ server.use(
   cors({
     origin: "*",
     credentials: true,
-    allowedHeaders: "*",
-    methods: "*",
+    allowedHeaders: "Content-Type",
+    methods: ["POST", "GET", "PATCH", "DELETE"],
   })
 );
 
