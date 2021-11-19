@@ -1,5 +1,6 @@
 import { Form, Select, Input, Button, Row, Col } from "antd";
 import { ValuesType } from "../common/models";
+import { trimStringInObject } from "../utils/trimStringInObject";
 import { defaultValidateMessages } from "../utils/validateMessage";
 
 export function RoomForm({
@@ -13,6 +14,11 @@ export function RoomForm({
   children?: React.ReactNode;
   buttonSumbitTitle?: string;
 }) {
+  function submitHandler(values: ValuesType) {
+    const result: any = trimStringInObject(values);
+    onFinish({ ...result });
+  }
+
   return (
     <Row style={{ height: "100%" }}>
       <Form
@@ -27,7 +33,7 @@ export function RoomForm({
         wrapperCol={{ span: 11 }}
         validateMessages={defaultValidateMessages}
         initialValues={{ remember: true }}
-        onFinish={onFinish}
+        onFinish={submitHandler}
         autoComplete="off"
       >
         <Row>
@@ -58,7 +64,7 @@ export function RoomForm({
               label="Описание"
               name="description"
               rules={[{ required: true }]}
-              initialValue={initial?.description}
+              initialValue={initial?.description || ""}
             >
               <Input.TextArea name="description" />
             </Form.Item>

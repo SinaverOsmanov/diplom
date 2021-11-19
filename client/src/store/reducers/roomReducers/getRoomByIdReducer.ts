@@ -1,5 +1,9 @@
 import { getRoomAPI, updateRoomAPI } from "../../../api/httpApi";
-import { DefaultStateRoomType, RoomItemType } from "../../../common/models";
+import {
+  DefaultStateRoomType,
+  RoomFormType,
+  RoomItemType,
+} from "../../../common/models";
 import { messageNotification } from "../../../utils/notification";
 import {
   GET_ROOM_FAIL,
@@ -74,13 +78,7 @@ export const updateRoomThunkCreator =
     description,
     quality,
     photoUrl,
-  }: {
-    roomId: string;
-    title: string;
-    description: string;
-    quality: string;
-    photoUrl: string | null;
-  }) =>
+  }: RoomFormType & { roomId: string }) =>
   async (dispatch: any) => {
     try {
       dispatch({ type: GET_ROOM_REQUEST });

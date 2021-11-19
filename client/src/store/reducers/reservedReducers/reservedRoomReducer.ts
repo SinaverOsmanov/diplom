@@ -1,4 +1,5 @@
 import { reservRoomAPI, unReservRoomAPI } from "../../../api/httpApi";
+import { GetApiRoomByIdType } from "../../../common/models";
 import { messageNotification } from "../../../utils/notification";
 import {
   RESERV_ROOM_REQUEST,
@@ -40,7 +41,7 @@ export const reservedRoomThunkCreator =
   (id: string, reserv: string) => async (dispatch: any) => {
     try {
       dispatch({ type: RESERV_ROOM_REQUEST });
-      let dataRequest: { codeStatus: number; message: string; roomId: string };
+      let dataRequest: GetApiRoomByIdType;
       if (reserv === "reserv") {
         dataRequest = await reservRoomAPI(id);
       } else {

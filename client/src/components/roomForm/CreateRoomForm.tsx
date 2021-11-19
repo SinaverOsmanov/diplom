@@ -7,7 +7,7 @@ export function CreateRoomForm() {
   const dispatch = useDispatch();
   const onFinish = async (values: ValuesType) => {
     const { title, description, quality, photoUrl } = values;
-    dispatch(addRoomThunkCreator(title, description, quality, photoUrl));
+    dispatch(addRoomThunkCreator({ title, description, quality, photoUrl }));
   };
 
   return (

@@ -1,5 +1,3 @@
-export {};
-
 export type RoomItemType = {
   _id: string;
   title: string;
@@ -27,29 +25,41 @@ export type AuthFormType = {
   submitBtnText: string;
 };
 
-export type DefaultStateRoomsType = {
+export type DefaultStateType = {
+  loading: boolean;
+  error: string;
+};
+
+export type DefaultStateRoomsType = DefaultStateType & {
   rooms: [] | RoomItemType[];
-  loading: boolean;
-  error: string;
 };
 
-export type DefaultStateRoomType = {
+export type DefaultStateRoomType = DefaultStateType & {
   room: {} | RoomItemType;
-  loading: boolean;
-  error: string;
 };
 
-export type DefaultStateAuthType = {
+export type DefaultStateAuthType = DefaultStateType & {
   auth: boolean;
-  loading: boolean;
-  error: string;
 };
 
-export type getApiRoomsType = { rooms: RoomItemType[]; codeStatus: number };
+export type GetApiRoomsType = { rooms: RoomItemType[]; codeStatus: number };
 
 export type ValuesType = Omit<RoomItemType, "_id" | "roomNumber" | "reserved">;
 
-export type addRoomType = {
+export type ResponseType = {
+  codeStatus: number;
+  message: string;
+};
+
+export type GetApiRoomByIdType = ResponseType & {
+  roomId: string;
+};
+
+export type GetApiRoomType = ResponseType & {
+  room: RoomItemType;
+};
+
+export type RoomFormType = {
   title: string;
   description: string;
   quality: string;

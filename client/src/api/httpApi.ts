@@ -1,4 +1,4 @@
-import { addRoomType, UserType } from "../common/models";
+import { RoomFormType, UserType } from "../common/models";
 
 async function apiRequest(
   path: string,
@@ -24,7 +24,7 @@ export async function addRoomAPI({
   description,
   quality,
   photoUrl,
-}: addRoomType) {
+}: RoomFormType) {
   return apiRequest("rooms/addRoom", "POST", {
     title,
     description,
@@ -41,7 +41,7 @@ export async function updateRoomAPI({
   roomId,
 }: {
   roomId: string;
-} & addRoomType) {
+} & RoomFormType) {
   return apiRequest(`rooms/updateRoom/${roomId}`, "PATCH", {
     title,
     description,

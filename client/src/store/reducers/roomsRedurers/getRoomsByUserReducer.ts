@@ -1,7 +1,7 @@
 import { getUserRoomsAPI } from "../../../api/httpApi";
 import {
   DefaultStateRoomsType,
-  getApiRoomsType,
+  GetApiRoomsType,
   RoomItemType,
 } from "../../../common/models";
 import {
@@ -43,7 +43,7 @@ export const getUserRoomsAction = (payload: any) => ({
 export const getUserRoomsThunkCreator = () => async (dispatch: any) => {
   try {
     dispatch({ type: GET_ROOMS_REQUEST });
-    const dataRequest: getApiRoomsType = await getUserRoomsAPI();
+    const dataRequest: GetApiRoomsType = await getUserRoomsAPI();
 
     if (dataRequest.codeStatus === 200) {
       dispatch(getUserRoomsAction(dataRequest.rooms));

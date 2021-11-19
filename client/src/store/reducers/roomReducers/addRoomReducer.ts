@@ -1,4 +1,5 @@
 import { addRoomAPI } from "../../../api/httpApi";
+import { GetApiRoomByIdType, RoomFormType } from "../../../common/models";
 import { messageNotification } from "../../../utils/notification";
 import {
   ADD_ROOM_REQUEST,
@@ -34,24 +35,13 @@ export const addRoomAction = (payload: any) => ({
   payload: payload,
 });
 
-type roomResponseType = {
-  roomId: string;
-  codeStatus: number;
-  message: string;
-};
-
 export const addRoomThunkCreator =
-  (
-    title: string,
-    description: string,
-    quality: string,
-    photoUrl: string | null
-  ) =>
+  ({ title, description, quality, photoUrl }: RoomFormType) =>
   async (dispatch: any) => {
     try {
       dispatch({ type: ADD_ROOM_REQUEST });
 
-      const { roomId, codeStatus, message }: roomResponseType =
+      const { roomId, codeStatus, message }: GetApiRoomByIdType =
         await addRoomAPI({
           title,
           description,

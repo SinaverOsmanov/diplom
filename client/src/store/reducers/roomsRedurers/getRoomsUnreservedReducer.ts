@@ -1,7 +1,7 @@
 import { getRoomsUnreservedAPI } from "../../../api/httpApi";
 import {
   DefaultStateRoomsType,
-  getApiRoomsType,
+  GetApiRoomsType,
   RoomItemType,
 } from "../../../common/models";
 import {
@@ -41,7 +41,7 @@ export const getRoomsUnreservedAction = (payload: RoomItemType[]) => ({
 export const getRoomsUnreservedThunkCreator = () => async (dispatch: any) => {
   try {
     dispatch({ type: GET_ROOMS_REQUEST });
-    const { rooms, codeStatus }: getApiRoomsType =
+    const { rooms, codeStatus }: GetApiRoomsType =
       await getRoomsUnreservedAPI();
     if (codeStatus === 200) {
       dispatch(getRoomsUnreservedAction(rooms));

@@ -12,6 +12,7 @@
   "scripts": {
     "dev": "concurrently --kill-others \"nodemon -x ts-node index.ts\" \"cd client && yarn start\"",
     "start": "ts-node index.ts",
+    "heroku-devbuild": "cd client && yarn build && cd .. && heroku local web",
     "heroku-postbuild": "cd client && yarn install && yarn build"
   },
   "keywords": [],
