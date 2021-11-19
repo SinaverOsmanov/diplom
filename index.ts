@@ -27,7 +27,7 @@ server.use("/api", router);
 if (process.env.NODE_ENV === "production") {
   server.use(express.static(path.join(__dirname, "client/build")));
 
-  server.get("*", (req: any, res: any) => {
+  server.get("/*", (req: any, res: any) => {
     res.sendFile(path.join(__dirname, "client/build", "index.html"));
   });
 }
