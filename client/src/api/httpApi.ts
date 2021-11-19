@@ -5,7 +5,7 @@ async function apiRequest(
   method: string = "POST",
   body?: null | any
 ) {
-  const API_URL = "api/";
+  const API_URL = "/api/";
 
   const headers = new Headers();
   headers.append("Content-Type", "application/json");
