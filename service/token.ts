@@ -1,12 +1,11 @@
 import jwt from "jsonwebtoken";
-import { config } from "./../config/config";
 import { Token } from "./../models/Token";
 import { ObjectId } from "mongodb";
 import path from "path";
 require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 export function generateWebTokens(payload: any) {
-  const accessToken = jwt.sign(payload, config.jwt_access_token, {
+  const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN!, {
     expiresIn: "30d",
   });
   return { accessToken };

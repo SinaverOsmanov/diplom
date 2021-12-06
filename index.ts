@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === "production") {
 
 const start = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URL || config.mongoUrl);
+    await mongoose.connect(process.env.MONGO_URL);
     server.listen(port, () => {
       console.log(`Example app listening at http://localhost:${port}`);
     });
