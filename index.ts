@@ -14,21 +14,14 @@ server.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 server.use(cookieParser());
 server.use(
   cors({
-    origin:
-      process.env.NODE_ENV === "production" ? "*" : "http://localhost:3000",
+    origin: "*",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["POST", "GET", "PATCH", "DELETE"],
   })
 );
 
-async function isAuth(req: any, res: any, next: any) {
-  const data: any = req.headers.authorization.split(" ")[1];
-  console.log(data);
-  next();
-}
-
-server.use("/api", isAuth, router);
+server.use("/api", router);
 
 if (process.env.NODE_ENV === "production") {
   server.use(express.static(path.join(__dirname, "client/build")));
