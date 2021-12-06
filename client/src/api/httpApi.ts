@@ -1,22 +1,41 @@
 import { RoomFormType, UserType } from "../common/models";
+import { useEnvironment } from "../config.json";
+import { getDataLocalStorage } from "../utils/localStorage";
+import { messageNotification } from "../utils/notification";
 
 async function apiRequest(
   path: string,
   method: string = "POST",
   body?: null | any
 ) {
-  const API_URL = "/api/";
-
+  const API_URL = useEnvironment ? "http://localhost:8080/api/" : "/api/";
   const headers = new Headers();
+  const token = getDataLocalStorage("access-token");
   headers.append("Content-Type", "application/json");
-  let response = await fetch(`${API_URL + path}`, {
-    method: method,
-    headers: headers,
-    credentials: "include",
-    body: method === "GET" ? undefined : JSON.stringify(body),
-  });
-  const { data } = await response.json();
-  return data;
+  headers.append("Authorization", `Bearer ${token}`);
+  try {
+    let response = await fetch(`${API_URL + path}`, {
+      method: method,
+      headers: headers,
+      credentials: "include",
+      body: method === "GET" ? undefined : JSON.stringify(body),
+    });
+    const { data } = await response.json();
+    if (data.codeStatus >= 400) {
+      throw new Error(data.message);
+    }
+
+    if (data.message) {
+      messageNotification({
+        codeStatus: data.codeStatus,
+        messageRequest: data.message,
+      });
+    }
+
+    return data;
+  } catch (error: any) {
+    messageNotification({ codeStatus: 400, messageRequest: error.message });
+  }
 }
 
 export async function addRoomAPI({

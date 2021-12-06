@@ -1,5 +1,5 @@
 import { Form, Select, Input, Button, Row, Col } from "antd";
-import { ValuesType } from "../common/models";
+import { RoomFormType } from "../common/models";
 import { trimStringInObject } from "../utils/trimStringInObject";
 import { defaultValidateMessages } from "../utils/validateMessage";
 
@@ -9,12 +9,12 @@ export function RoomForm({
   children,
   buttonSumbitTitle,
 }: {
-  initial?: ValuesType;
-  onFinish(values: ValuesType): void;
+  initial?: RoomFormType;
+  onFinish(values: RoomFormType): void;
   children?: React.ReactNode;
   buttonSumbitTitle?: string;
 }) {
-  function submitHandler(values: ValuesType) {
+  function submitHandler(values: RoomFormType) {
     const result: any = trimStringInObject(values);
     onFinish({ ...result });
   }

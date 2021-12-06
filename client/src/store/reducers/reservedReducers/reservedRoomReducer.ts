@@ -1,6 +1,6 @@
 import { reservRoomAPI, unReservRoomAPI } from "../../../api/httpApi";
 import { GetApiRoomByIdType } from "../../../common/models";
-import { messageNotification } from "../../../utils/notification";
+
 import {
   RESERV_ROOM_REQUEST,
   RESERV_ROOM_FAIL,
@@ -48,10 +48,6 @@ export const reservedRoomThunkCreator =
         dataRequest = await unReservRoomAPI(id);
       }
 
-      messageNotification({
-        codeStatus: dataRequest.codeStatus,
-        message: dataRequest.message,
-      });
       dispatch(getRoomByIdThunkCreator(dataRequest.roomId));
     } catch (error) {
       dispatch({ type: RESERV_ROOM_FAIL });

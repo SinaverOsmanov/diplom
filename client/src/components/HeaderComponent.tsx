@@ -24,7 +24,7 @@ const MenuRowStyle = styled(Row)`
 export function HeaderComponent() {
   const dispatch = useDispatch();
   const history = useHistory();
-  const data = getDataLocalStorage();
+  const data = getDataLocalStorage('data');
 
   const { auth } = useSelector((state: any) => state.auth);
 
@@ -32,6 +32,7 @@ export function HeaderComponent() {
     dispatch(logoutUserThunkCreator());
     history.push("/");
   }
+
 
   return (
     <HeaderStyle

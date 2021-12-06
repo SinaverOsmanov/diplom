@@ -1,17 +1,17 @@
-export function getDataLocalStorage() {
-  const data = localStorage.getItem("data");
+export function getDataLocalStorage(key: string) {
+  const data = localStorage.getItem(key);
   if (data) {
     return JSON.parse(data);
   }
   return null;
 }
 
-export function setDataLocalStorage<T>(response: T): void {
+export function setDataLocalStorage<T>(key: string, response: T): void {
   if (response) {
-    localStorage.setItem("data", JSON.stringify(response));
+    localStorage.setItem(key, JSON.stringify(response));
   }
 }
 
-export function removeDataLocalStorage() {
-  localStorage.removeItem("data");
+export function removeDataLocalStorage(key: string) {
+  localStorage.removeItem(key);
 }

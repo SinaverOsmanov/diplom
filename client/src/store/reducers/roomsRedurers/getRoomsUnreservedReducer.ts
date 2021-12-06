@@ -43,7 +43,7 @@ export const getRoomsUnreservedThunkCreator = () => async (dispatch: any) => {
     dispatch({ type: GET_ROOMS_REQUEST });
     const { rooms, codeStatus }: GetApiRoomsType =
       await getRoomsUnreservedAPI();
-    if (codeStatus === 200) {
+    if (codeStatus) {
       dispatch(getRoomsUnreservedAction(rooms));
     }
   } catch (error) {

@@ -1,6 +1,6 @@
 import { addRoomAPI } from "../../../api/httpApi";
 import { GetApiRoomByIdType, RoomFormType } from "../../../common/models";
-import { messageNotification } from "../../../utils/notification";
+
 import {
   ADD_ROOM_REQUEST,
   ADD_ROOM_FAIL,
@@ -41,22 +41,16 @@ export const addRoomThunkCreator =
     try {
       dispatch({ type: ADD_ROOM_REQUEST });
 
-      const { roomId, codeStatus, message }: GetApiRoomByIdType =
-        await addRoomAPI({
-          title,
-          description,
-          quality,
-          photoUrl,
-        });
+      const { roomId }: GetApiRoomByIdType = await addRoomAPI({
+        title,
+        description,
+        quality,
+        photoUrl,
+      });
 
-      if (codeStatus === 201) {
-        const newRoom = { _id: roomId, description, quality, photoUrl };
-        messageNotification({
-          codeStatus: codeStatus,
-          message: message,
-        });
-        dispatch(addRoomAction(newRoom));
-      }
+      const newRoom = { _id: roomId, description, quality, photoUrl };
+
+      dispatch(addRoomAction(newRoom));
     } catch (error) {
       dispatch({ type: ADD_ROOM_FAIL });
     }

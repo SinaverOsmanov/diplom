@@ -8,6 +8,11 @@ export type RoomItemType = {
   reserved: string | null;
 };
 
+export type RoomFormType = Omit<
+  RoomItemType,
+  "_id" | "roomNumber" | "reserved"
+>;
+
 export type UserType = {
   email: string;
   password: string;
@@ -44,24 +49,15 @@ export type DefaultStateAuthType = DefaultStateType & {
 
 export type GetApiRoomsType = { rooms: RoomItemType[]; codeStatus: number };
 
-export type ValuesType = Omit<RoomItemType, "_id" | "roomNumber" | "reserved">;
-
 export type ResponseType = {
   codeStatus: number;
   message: string;
 };
 
-export type GetApiRoomByIdType = ResponseType & {
+export type GetApiRoomByIdType = {
   roomId: string;
 };
 
-export type GetApiRoomType = ResponseType & {
+export type GetApiRoomType = {
   room: RoomItemType;
-};
-
-export type RoomFormType = {
-  title: string;
-  description: string;
-  quality: string;
-  photoUrl: string | null;
 };
