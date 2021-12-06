@@ -12,6 +12,7 @@ import { AUTH_USER_SUCCESS } from "../../store/types/types";
 import { useHistory, useLocation } from "react-router";
 import { ContentStyle } from "./ContentComponentStyle";
 import { Routes } from "../../layouts/Routes";
+import { logoutUserThunkCreator } from './../../store/reducers/userReducers/logoutUserReducer';
 
 export function ContentComponent() {
   const { auth } = useSelector((state: any) => state.auth);
@@ -20,12 +21,20 @@ export function ContentComponent() {
   const { pathname } = useLocation();
   const history = useHistory();
   useEffect(() => {
-    const data = getDataLocalStorage();
+    const data = getDataLocalStorage('data');
+    const exp = getDataLocalStorage('expiresIn')
     if (data) {
       dispatch({ type: AUTH_USER_SUCCESS, payload: true });
       history.push(pathname);
     }
+  
+    if(exp && exp < Date.now()) {
+      dispatch(logoutUserThunkCreator());
+      history.push("/");
+    }
+  
   }, [dispatch, history, pathname]);
+
 
   return (
     <ContentStyle>

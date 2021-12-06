@@ -18,7 +18,7 @@ export function ExtendedRoomPage() {
   const room: RoomItemType = useSelector((state: any) => state.room.room);
   const loading = useSelector((state: any) => state.room.loading);
 
-  const data = getDataLocalStorage();
+  const data = getDataLocalStorage('data');
 
   const dispatch = useDispatch();
 

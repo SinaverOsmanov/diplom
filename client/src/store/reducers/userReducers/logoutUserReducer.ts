@@ -1,7 +1,6 @@
 import { logoutAPI } from "../../../api/httpApi";
 import { DefaultStateAuthType } from "../../../common/models";
 import { removeDataLocalStorage } from "../../../utils/localStorage";
-import { messageNotification } from "../../../utils/notification";
 import {
   AUTH_USER_REQUEST,
   AUTH_USER_FAIL,
@@ -40,13 +39,12 @@ export const logoutUserThunkCreator = () => async (dispatch: any) => {
   try {
     dispatch({ type: AUTH_USER_REQUEST });
 
-    const dataRequest = await logoutAPI();
-    if (dataRequest) {
-      messageNotification(dataRequest);
-      if (dataRequest.codeStatus === 200) {
-        removeDataLocalStorage();
-        dispatch(logoutUserAction(false));
-      }
+    const { codeStatus } = await logoutAPI();
+    if (codeStatus) {
+      removeDataLocalStorage("data");
+      removeDataLocalStorage("expiresIn");
+      removeDataLocalStorage("access-token");
+      dispatch(logoutUserAction(false));
     }
   } catch (error) {
     dispatch({ type: AUTH_USER_FAIL, error: error });

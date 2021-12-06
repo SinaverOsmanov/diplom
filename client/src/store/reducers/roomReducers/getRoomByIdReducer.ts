@@ -4,7 +4,7 @@ import {
   RoomFormType,
   RoomItemType,
 } from "../../../common/models";
-import { messageNotification } from "../../../utils/notification";
+
 import {
   GET_ROOM_FAIL,
   GET_ROOM_REQUEST,
@@ -83,19 +83,14 @@ export const updateRoomThunkCreator =
     try {
       dispatch({ type: GET_ROOM_REQUEST });
 
-      const {
-        codeStatus,
-        message,
-      }: { room: RoomItemType; codeStatus: number; message: string } =
-        await updateRoomAPI({ roomId, title, description, quality, photoUrl });
-
-      if (codeStatus === 202) {
-        messageNotification({
-          codeStatus: codeStatus,
-          message: message,
-        });
-        dispatch(updateRoomAction({ title, description, quality, photoUrl }));
-      }
+      await updateRoomAPI({
+        roomId,
+        title,
+        description,
+        quality,
+        photoUrl,
+      });
+      dispatch(updateRoomAction({ title, description, quality, photoUrl }));
     } catch (error) {
       dispatch({ type: GET_ROOM_FAIL });
     }

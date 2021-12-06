@@ -8,7 +8,7 @@
       "type": "node-terminal",
       "name": "Run Script: dev",
       "request": "launch",
-      "command": "heroku local web",
+      "command": "yarn nodemon -x ts-node index.ts",
       "cwd": "${workspaceFolder}"
     }
   ]

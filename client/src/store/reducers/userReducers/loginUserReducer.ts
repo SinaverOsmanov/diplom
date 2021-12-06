@@ -1,7 +1,7 @@
 import { loginUserAPI } from "../../../api/httpApi";
 import { DefaultStateAuthType, UserType } from "../../../common/models";
 import { setDataLocalStorage } from "../../../utils/localStorage";
-import { messageNotification } from "../../../utils/notification";
+
 import {
   AUTH_USER_REQUEST,
   AUTH_USER_FAIL,
@@ -50,14 +50,14 @@ export const loginUserThunkCreator =
 
       const dataRequest = await loginUserAPI(data);
       if (dataRequest) {
-        messageNotification(dataRequest);
-        if (dataRequest.codeStatus === 200) {
-          setDataLocalStorage({
-            user: dataRequest.user,
-            isAdmin: dataRequest.isAdmin,
-          });
-          dispatch(loginUserAction(true));
-        }
+        setDataLocalStorage("data", {
+          user: dataRequest.user,
+          isAdmin: dataRequest.isAdmin,
+        });
+        setDataLocalStorage("access-token", dataRequest.accessToken);
+        const exp: number = Date.now() + 60000;
+        setDataLocalStorage("expiresIn", exp);
+        dispatch(loginUserAction(true));
       }
     } catch (error) {
       dispatch({ type: AUTH_USER_FAIL, error: error });

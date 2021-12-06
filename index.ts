@@ -1,4 +1,5 @@
 const config = require("./config/config");
+import { badRequestJSON } from "./helpers";
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -15,14 +16,21 @@ server.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 server.use(cookieParser());
 server.use(
   cors({
-    origin: "*",
+    origin:
+      process.env.NODE_ENV === "production" ? "*" : "http://localhost:3000",
     credentials: true,
-    allowedHeaders: "Content-Type",
+    allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["POST", "GET", "PATCH", "DELETE"],
   })
 );
 
-server.use("/api", router);
+async function isAuth(req: any, res: any, next: any) {
+  const data: any = req.headers.authorization.split(" ")[1];
+  console.log(data);
+  next();
+}
+
+server.use("/api", isAuth, router);
 
 if (process.env.NODE_ENV === "production") {
   server.use(express.static(path.join(__dirname, "client/build")));

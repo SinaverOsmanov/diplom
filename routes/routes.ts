@@ -90,6 +90,7 @@ router.post("/login", async function (req: Request, res: Response) {
     res.json({
       data: {
         isAdmin: !!isAdmin,
+        accessToken: accessToken,
         user: userData.id.toHexString(),
         codeStatus: 200,
         message: "Добро пожаловать",

@@ -1,7 +1,6 @@
 import { createUserAPI } from "../../../api/httpApi";
 import { DefaultStateAuthType, UserType } from "../../../common/models";
 import { setDataLocalStorage } from "../../../utils/localStorage";
-import { messageNotification } from "../../../utils/notification";
 import {
   AUTH_USER_REQUEST,
   AUTH_USER_FAIL,
@@ -44,11 +43,8 @@ export const registrationUserThunkCreator =
       const dataRequest = await createUserAPI(data);
 
       if (dataRequest) {
-        messageNotification(dataRequest);
-        if (dataRequest.codeStatus === 200) {
-          setDataLocalStorage(dataRequest);
-          dispatch(registrationUserAction(true));
-        }
+        setDataLocalStorage("data", dataRequest);
+        dispatch(registrationUserAction(true));
       }
     } catch (error) {
       dispatch({ type: AUTH_USER_FAIL, error: error });

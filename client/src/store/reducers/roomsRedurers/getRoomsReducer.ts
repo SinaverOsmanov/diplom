@@ -44,7 +44,7 @@ export const getRoomsThunkCreator = () => async (dispatch: any) => {
   try {
     dispatch({ type: GET_ROOMS_REQUEST });
     const { rooms, codeStatus }: GetApiRoomsType = await getRoomsAPI();
-    if (codeStatus === 200) {
+    if (codeStatus) {
       dispatch(getRoomsAction(rooms));
     }
   } catch (error) {

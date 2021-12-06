@@ -1,6 +1,6 @@
 import { Button } from "antd";
 import { useDispatch } from "react-redux";
-import { RoomItemType, ValuesType } from "../../common/models";
+import { RoomFormType, RoomItemType } from "../../common/models";
 import { updateRoomThunkCreator } from "../../store/reducers/roomReducers/getRoomByIdReducer";
 import { RoomForm } from "../RoomFormComponent";
 
@@ -14,7 +14,7 @@ export function UpdateRoomForm({
   buttonSumbitTitle: string;
 }) {
   const dispatch = useDispatch();
-  const onFinish = async (values: ValuesType) => {
+  const onFinish = async (values: RoomFormType) => {
     const { title, description, quality, photoUrl } = values;
     dispatch(
       updateRoomThunkCreator({
