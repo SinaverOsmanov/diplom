@@ -1,3 +1,4 @@
+import { Dispatch } from "redux";
 import { getRoomAPI, updateRoomAPI } from "../../../api/httpApi";
 import {
   DefaultStateRoomType,
@@ -12,9 +13,9 @@ import {
 } from "../../types/types";
 
 const defaultState = {
-  room: {},
+  room: null,
   loading: false,
-  error: "",
+  error: null,
 };
 
 export function getRoomByIdReducer(
@@ -36,7 +37,7 @@ export function getRoomByIdReducer(
       return { ...state, error: action.payload, loading: false };
 
     default:
-      return state;
+      return { ...state };
   }
 }
 
@@ -46,7 +47,7 @@ export const getRoomById = (payload: RoomItemType) => ({
 });
 
 export const getRoomByIdThunkCreator =
-  (id: string) => async (dispatch: any) => {
+  (id: string) => async (dispatch: Dispatch) => {
     try {
       dispatch({ type: GET_ROOM_REQUEST });
 
@@ -79,7 +80,7 @@ export const updateRoomThunkCreator =
     quality,
     photoUrl,
   }: RoomFormType & { roomId: string }) =>
-  async (dispatch: any) => {
+  async (dispatch: Dispatch) => {
     try {
       dispatch({ type: GET_ROOM_REQUEST });
 
@@ -95,3 +96,9 @@ export const updateRoomThunkCreator =
       dispatch({ type: GET_ROOM_FAIL });
     }
   };
+
+export const getRoom = () => (state: { room: DefaultStateRoomType }) =>
+  state.room.room;
+
+export const getRoomLoading = () => (state: { room: DefaultStateRoomType }) =>
+  state.room.loading;

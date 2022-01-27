@@ -1,3 +1,4 @@
+import { Dispatch } from "redux";
 import { getRoomsAPI } from "../../../api/httpApi";
 import {
   DefaultStateRoomsType,
@@ -11,9 +12,9 @@ import {
 } from "../../types/types";
 
 const defaultState = {
-  rooms: [],
-  loading: true,
-  error: "",
+  rooms: null,
+  loading: false,
+  error: null,
 };
 
 export function getRoomsReducer(
@@ -25,13 +26,13 @@ export function getRoomsReducer(
       return { ...state, loading: true };
 
     case GET_ROOMS_SUCCESS:
-      return { ...state, rooms: action.payload, loading: false };
+      return { ...state, rooms: [...action.payload], loading: false };
 
     case GET_ROOMS_FAIL:
       return { ...state, error: action.payload, loading: false };
 
     default:
-      return state;
+      return { ...state };
   }
 }
 
@@ -40,7 +41,7 @@ export const getRoomsAction = (payload: RoomItemType[]) => ({
   payload: payload,
 });
 
-export const getRoomsThunkCreator = () => async (dispatch: any) => {
+export const getRoomsThunkCreator = () => async (dispatch: Dispatch) => {
   try {
     dispatch({ type: GET_ROOMS_REQUEST });
     const { rooms, codeStatus }: GetApiRoomsType = await getRoomsAPI();
@@ -51,3 +52,10 @@ export const getRoomsThunkCreator = () => async (dispatch: any) => {
     dispatch({ type: GET_ROOMS_FAIL, payload: error });
   }
 };
+
+export const getRooms = () => (state: { rooms: DefaultStateRoomsType }) =>
+  state.rooms.rooms;
+
+export const getRoomsLoading =
+  () => (state: { rooms: DefaultStateRoomsType }) =>
+    state.rooms.loading;

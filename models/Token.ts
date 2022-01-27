@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const TokenSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.ObjectId, ref: "User" },
-    accessToken: { type: String, required: true },
+    refreshToken: { type: String, required: true },
   },
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
 
 export const Token = mongoose.model("tokens", TokenSchema);

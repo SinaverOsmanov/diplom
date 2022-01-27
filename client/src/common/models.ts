@@ -32,19 +32,20 @@ export type AuthFormType = {
 
 export type DefaultStateType = {
   loading: boolean;
-  error: string;
+  error: null;
 };
 
 export type DefaultStateRoomsType = DefaultStateType & {
-  rooms: [] | RoomItemType[];
+  rooms: RoomItemType[] | null;
 };
 
 export type DefaultStateRoomType = DefaultStateType & {
-  room: {} | RoomItemType;
+  room: RoomItemType | null;
 };
 
 export type DefaultStateAuthType = DefaultStateType & {
-  auth: boolean;
+  auth: boolean | null;
+  admin: boolean | null;
 };
 
 export type GetApiRoomsType = { rooms: RoomItemType[]; codeStatus: number };
@@ -61,3 +62,11 @@ export type GetApiRoomByIdType = {
 export type GetApiRoomType = {
   room: RoomItemType;
 };
+
+export interface IUserDataRequest {
+  userId: string;
+  isAdmin: boolean;
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+}

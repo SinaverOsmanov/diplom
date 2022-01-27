@@ -1,5 +1,9 @@
+import { Dispatch } from "redux";
 import { reservRoomAPI, unReservRoomAPI } from "../../../api/httpApi";
-import { GetApiRoomByIdType } from "../../../common/models";
+import {
+  DefaultStateRoomType,
+  GetApiRoomByIdType,
+} from "../../../common/models";
 
 import {
   RESERV_ROOM_REQUEST,
@@ -7,10 +11,9 @@ import {
   RESERV_ROOM_SUCCESS,
 } from "../../types/types";
 import { getRoomByIdThunkCreator } from "../roomReducers/getRoomByIdReducer";
-const defaultState = { loading: false };
 
 export function reservedRoomReducer(
-  state: any = defaultState,
+  state: DefaultStateRoomType,
   action: { type: string; payload: string }
 ) {
   switch (action.type) {
@@ -28,7 +31,7 @@ export function reservedRoomReducer(
       return { ...state, loading: false, error: action.payload };
 
     default:
-      return state;
+      return { ...state };
   }
 }
 

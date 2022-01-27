@@ -1,3 +1,4 @@
+import { Dispatch } from "redux";
 import { getUserRoomsAPI } from "../../../api/httpApi";
 import {
   DefaultStateRoomsType,
@@ -10,14 +11,8 @@ import {
   GET_ROOMS_SUCCESS,
 } from "../../types/types";
 
-const defaultState = {
-  rooms: [],
-  loading: false,
-  error: "",
-};
-
 export function getRoomsByUserReducer(
-  state: DefaultStateRoomsType = defaultState,
+  state: DefaultStateRoomsType,
   action: { type: string; payload: RoomItemType[] }
 ) {
   switch (action.type) {
@@ -25,13 +20,13 @@ export function getRoomsByUserReducer(
       return { ...state, loading: true };
 
     case GET_ROOMS_SUCCESS:
-      return { ...state, rooms: action.payload, loading: false };
+      return { ...state, rooms: [...action.payload], loading: false };
 
     case GET_ROOMS_FAIL:
       return { ...state, error: action.payload, loading: false };
 
     default:
-      return state;
+      return { ...state };
   }
 }
 
@@ -40,7 +35,7 @@ export const getUserRoomsAction = (payload: any) => ({
   payload: payload,
 });
 
-export const getUserRoomsThunkCreator = () => async (dispatch: any) => {
+export const getUserRoomsThunkCreator = () => async (dispatch: Dispatch) => {
   try {
     dispatch({ type: GET_ROOMS_REQUEST });
     const dataRequest: GetApiRoomsType = await getUserRoomsAPI();

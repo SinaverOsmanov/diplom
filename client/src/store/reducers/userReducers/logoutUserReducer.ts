@@ -1,6 +1,7 @@
+import { Dispatch } from "redux";
 import { logoutAPI } from "../../../api/httpApi";
 import { DefaultStateAuthType } from "../../../common/models";
-import { removeDataLocalStorage } from "../../../utils/localStorage";
+import { removeAuthData } from "../../../utils/localStorage";
 import {
   AUTH_USER_REQUEST,
   AUTH_USER_FAIL,
@@ -9,7 +10,7 @@ import {
 
 export function logoutUserReducer(
   state: DefaultStateAuthType,
-  action: { type: string; payload: boolean }
+  action: { type: string; payload: boolean | null }
 ) {
   switch (action.type) {
     case AUTH_USER_REQUEST:
@@ -26,25 +27,23 @@ export function logoutUserReducer(
       return { ...state, error: action.payload, loading: false };
 
     default:
-      return state;
+      return { ...state };
   }
 }
 
-export const logoutUserAction = (payload: boolean) => ({
+export const logoutUserAction = (payload: null) => ({
   type: AUTH_USER_SUCCESS,
   payload: payload,
 });
 
-export const logoutUserThunkCreator = () => async (dispatch: any) => {
+export const logoutUserThunkCreator = () => async (dispatch: Dispatch) => {
   try {
     dispatch({ type: AUTH_USER_REQUEST });
 
     const { codeStatus } = await logoutAPI();
-    if (codeStatus) {
-      removeDataLocalStorage("data");
-      removeDataLocalStorage("expiresIn");
-      removeDataLocalStorage("access-token");
-      dispatch(logoutUserAction(false));
+    if (codeStatus === 200) {
+      removeAuthData();
+      dispatch(logoutUserAction(null));
     }
   } catch (error) {
     dispatch({ type: AUTH_USER_FAIL, error: error });

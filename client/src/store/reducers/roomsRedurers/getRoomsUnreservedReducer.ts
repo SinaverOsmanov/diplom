@@ -1,3 +1,4 @@
+import { Dispatch } from "redux";
 import { getRoomsUnreservedAPI } from "../../../api/httpApi";
 import {
   DefaultStateRoomsType,
@@ -9,13 +10,9 @@ import {
   GET_ROOMS_FAIL,
   GET_ROOMS_SUCCESS,
 } from "../../types/types";
-const defaultState = {
-  rooms: [],
-  loading: true,
-  error: "",
-};
+
 export function getRoomsUnreservedReducer(
-  state: DefaultStateRoomsType = defaultState,
+  state: DefaultStateRoomsType,
   action: { type: string; payload: RoomItemType[] }
 ) {
   switch (action.type) {
@@ -23,13 +20,13 @@ export function getRoomsUnreservedReducer(
       return { ...state, loading: true };
 
     case GET_ROOMS_SUCCESS:
-      return { ...state, rooms: action.payload, loading: false };
+      return { ...state, rooms: [...action.payload], loading: false };
 
     case GET_ROOMS_FAIL:
       return { ...state, error: action.payload, loading: false };
 
     default:
-      return state;
+      return { ...state };
   }
 }
 
@@ -38,15 +35,16 @@ export const getRoomsUnreservedAction = (payload: RoomItemType[]) => ({
   payload: payload,
 });
 
-export const getRoomsUnreservedThunkCreator = () => async (dispatch: any) => {
-  try {
-    dispatch({ type: GET_ROOMS_REQUEST });
-    const { rooms, codeStatus }: GetApiRoomsType =
-      await getRoomsUnreservedAPI();
-    if (codeStatus) {
-      dispatch(getRoomsUnreservedAction(rooms));
+export const getRoomsUnreservedThunkCreator =
+  () => async (dispatch: Dispatch) => {
+    try {
+      dispatch({ type: GET_ROOMS_REQUEST });
+      const { rooms, codeStatus }: GetApiRoomsType =
+        await getRoomsUnreservedAPI();
+      if (codeStatus) {
+        dispatch(getRoomsUnreservedAction(rooms));
+      }
+    } catch (error) {
+      dispatch({ type: GET_ROOMS_FAIL, payload: error });
     }
-  } catch (error) {
-    dispatch({ type: GET_ROOMS_FAIL, payload: error });
-  }
-};
+  };

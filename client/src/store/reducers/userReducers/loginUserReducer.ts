@@ -1,6 +1,11 @@
+import { Dispatch } from "redux";
 import { loginUserAPI } from "../../../api/httpApi";
-import { DefaultStateAuthType, UserType } from "../../../common/models";
-import { setDataLocalStorage } from "../../../utils/localStorage";
+import {
+  DefaultStateAuthType,
+  IUserDataRequest,
+  UserType,
+} from "../../../common/models";
+import { getAdminStorage, setTokens } from "../../../utils/localStorage";
 
 import {
   AUTH_USER_REQUEST,
@@ -10,9 +15,10 @@ import {
 import {} from "../../types/types";
 
 const defaultState = {
-  auth: false,
+  auth: null,
   loading: false,
-  error: "",
+  error: null,
+  admin: getAdminStorage(),
 };
 
 export function loginUserReducer(
@@ -34,7 +40,7 @@ export function loginUserReducer(
       return { ...state, error: action.payload, loading: false };
 
     default:
-      return state;
+      return { ...state };
   }
 }
 
@@ -44,22 +50,20 @@ export const loginUserAction = (payload: boolean) => ({
 });
 
 export const loginUserThunkCreator =
-  (data: UserType) => async (dispatch: any) => {
+  (data: UserType) => async (dispatch: Dispatch) => {
     try {
       dispatch({ type: AUTH_USER_REQUEST });
 
-      const dataRequest = await loginUserAPI(data);
+      const dataRequest: IUserDataRequest = await loginUserAPI(data);
       if (dataRequest) {
-        setDataLocalStorage("data", {
-          user: dataRequest.user,
-          isAdmin: dataRequest.isAdmin,
-        });
-        setDataLocalStorage("access-token", dataRequest.accessToken);
-        const exp: number = Date.now() + 60000;
-        setDataLocalStorage("expiresIn", exp);
+        setTokens(dataRequest);
         dispatch(loginUserAction(true));
       }
     } catch (error) {
       dispatch({ type: AUTH_USER_FAIL, error: error });
     }
   };
+
+export const getAuth = () => (state: any) => state.auth.auth;
+
+export const getAdmin = () => (state: any) => state.auth.admin;

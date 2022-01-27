@@ -1,18 +1,28 @@
 import { RoomFormType, UserType } from "../common/models";
-import { useEnvironment } from "../config.json";
-import { getDataLocalStorage } from "../utils/localStorage";
 import { messageNotification } from "../utils/notification";
+import "dotenv";
+import {
+  getAccessToken,
+  getRefreshToken,
+  refreshUser,
+} from "./../utils/localStorage";
 
 async function apiRequest(
   path: string,
   method: string = "POST",
   body?: null | any
 ) {
-  const API_URL = useEnvironment ? "http://localhost:8080/api/" : "/api/";
+  const API_URL = process.env.NODE_ENV ? "http://localhost:8080/api/" : "/api/";
+
+  await refreshUser(API_URL);
+
   const headers = new Headers();
-  const token = getDataLocalStorage("access-token");
+  const token = getAccessToken();
+  if (token) {
+    headers.append("Authorization", `Bearer ${token}`);
+  }
   headers.append("Content-Type", "application/json");
-  headers.append("Authorization", `Bearer ${token}`);
+
   try {
     let response = await fetch(`${API_URL + path}`, {
       method: method,
@@ -70,19 +80,17 @@ export async function updateRoomAPI({
 }
 
 export async function createUserAPI(user: UserType) {
-  return apiRequest("registration", "POST", user);
-}
-
-export async function refreshUserAPI() {
-  return apiRequest("refresh", "GET");
+  return apiRequest("auth/registration", "POST", user);
 }
 
 export async function logoutAPI() {
-  return apiRequest("logout", "DELETE");
+  return apiRequest("auth/logout", "DELETE", {
+    refreshToken: getRefreshToken(),
+  });
 }
 
 export async function loginUserAPI(user: UserType) {
-  return apiRequest("login", "POST", user);
+  return apiRequest("auth/login", "POST", user);
 }
 
 export async function getRoomsAPI() {
@@ -90,21 +98,21 @@ export async function getRoomsAPI() {
 }
 
 export async function getRoomsUnreservedAPI() {
-  return apiRequest("unreservedRooms", "GET");
+  return apiRequest("rooms/unreservedRooms", "GET");
 }
 
 export async function getUserRoomsAPI() {
-  return apiRequest("userRooms", "GET");
+  return apiRequest("rooms/userRooms", "GET");
 }
 
 export async function getRoomAPI(id: string) {
-  return apiRequest(`rooms/${id}`, "GET");
+  return apiRequest(`rooms/room/${id}`, "GET");
 }
 
 export async function reservRoomAPI(roomId: string) {
-  return apiRequest(`reservRoom`, "PATCH", { roomId });
+  return apiRequest(`rooms/reservRoom`, "PATCH", { roomId });
 }
 
 export async function unReservRoomAPI(roomId: string) {
-  return apiRequest(`unReservRoom`, "PATCH", { roomId });
+  return apiRequest(`rooms/unReservRoom`, "PATCH", { roomId });
 }

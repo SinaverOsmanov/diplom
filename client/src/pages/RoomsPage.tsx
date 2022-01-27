@@ -6,7 +6,7 @@ import { useGetRooms } from "../customHooks/useGetRooms";
 export function RoomsPage() {
   const { rooms, loading } = useGetRooms(getRoomsUnreservedThunkCreator);
 
-  if (loading) {
+  if (loading || !rooms) {
     return <Loading />;
   }
 
@@ -16,5 +16,3 @@ export function RoomsPage() {
     </>
   );
 }
-
-// const [rooms] = useGetRooms();
