@@ -24,15 +24,9 @@ export function ContentComponent() {
   const history = useHistory();
   useEffect(() => {
     const userId = getUserId()
-    const exp = getTokenExpiresDate()
     if (userId) {
       dispatch({ type: AUTH_USER_SUCCESS, payload: true });
       history.push(pathname);
-    }
-  
-    if(exp && exp < Date.now()) {
-      dispatch(logoutUserThunkCreator());
-      history.push("/");
     }
   
   }, [dispatch, history, pathname]);

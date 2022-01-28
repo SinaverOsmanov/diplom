@@ -1,7 +1,13 @@
 import { Dispatch } from "redux";
-import { getRoomAPI, updateRoomAPI } from "../../../api/httpApi";
+import {
+  getRoomAPI,
+  reservRoomAPI,
+  unReservRoomAPI,
+  updateRoomAPI,
+} from "../../../api/httpApi";
 import {
   DefaultStateRoomType,
+  GetApiRoomByIdType,
   RoomFormType,
   RoomItemType,
 } from "../../../common/models";
@@ -10,6 +16,9 @@ import {
   GET_ROOM_FAIL,
   GET_ROOM_REQUEST,
   GET_ROOM_SUCCESS,
+  RESERV_ROOM_FAIL,
+  RESERV_ROOM_REQUEST,
+  RESERV_ROOM_SUCCESS,
 } from "../../types/types";
 
 const defaultState = {
@@ -102,3 +111,25 @@ export const getRoom = () => (state: { room: DefaultStateRoomType }) =>
 
 export const getRoomLoading = () => (state: { room: DefaultStateRoomType }) =>
   state.room.loading;
+
+export const reservedRoomAction = (payload: any) => ({
+  type: RESERV_ROOM_SUCCESS,
+  payload: payload,
+});
+
+export const reservedRoomThunkCreator =
+  (id: string, reserv: string) => async (dispatch: any) => {
+    try {
+      dispatch({ type: RESERV_ROOM_REQUEST });
+      let dataRequest: GetApiRoomByIdType;
+      if (reserv === "reserv") {
+        dataRequest = await reservRoomAPI(id);
+      } else {
+        dataRequest = await unReservRoomAPI(id);
+      }
+
+      dispatch(getRoomByIdThunkCreator(dataRequest.roomId));
+    } catch (error) {
+      dispatch({ type: RESERV_ROOM_FAIL });
+    }
+  };
