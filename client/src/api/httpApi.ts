@@ -12,7 +12,7 @@ async function apiRequest(
   method: string = "POST",
   body?: null | any
 ) {
-  const API_URL = process.env.NODE_ENV ? "http://localhost:8080/api/" : "/api/";
+  const API_URL = "/api/";
 
   await refreshUser(API_URL);
 
