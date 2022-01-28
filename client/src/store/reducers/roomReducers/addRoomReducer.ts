@@ -42,7 +42,10 @@ export const addRoomThunkCreator =
     try {
       dispatch({ type: ADD_ROOM_REQUEST });
 
-      const { roomId }: GetApiRoomByIdType = await addRoomAPI({
+      const {
+        roomId,
+        codeStatus,
+      }: GetApiRoomByIdType & { codeStatus: number } = await addRoomAPI({
         title,
         description,
         quality,
@@ -50,8 +53,9 @@ export const addRoomThunkCreator =
       });
 
       const newRoom = { _id: roomId, description, quality, photoUrl };
-
-      dispatch(addRoomAction(newRoom));
+      if (codeStatus === 201) {
+        dispatch(addRoomAction(newRoom));
+      }
     } catch (error) {
       dispatch({ type: ADD_ROOM_FAIL });
     }
