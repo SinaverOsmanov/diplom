@@ -100,7 +100,9 @@ export const updateRoomThunkCreator =
         quality,
         photoUrl,
       });
-      dispatch(updateRoomAction({ title, description, quality, photoUrl }));
+      if (codeStatus === 202) {
+        dispatch(updateRoomAction({ title, description, quality, photoUrl }));
+      }
     } catch (error) {
       dispatch({ type: GET_ROOM_FAIL });
     }
