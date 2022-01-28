@@ -93,7 +93,7 @@ export const updateRoomThunkCreator =
     try {
       dispatch({ type: GET_ROOM_REQUEST });
 
-      await updateRoomAPI({
+      const { codeStatus } = await updateRoomAPI({
         roomId,
         title,
         description,
