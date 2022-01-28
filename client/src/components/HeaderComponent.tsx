@@ -1,10 +1,11 @@
 import { Row, Col, Layout } from "antd";
 import { Link } from "react-router-dom";
-import { getDataLocalStorage } from "../utils/localStorage";
+import { getAdminStorage } from "../utils/localStorage";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { logoutUserThunkCreator } from "../store/reducers/userReducers/logoutUserReducer";
 import styled from "styled-components";
+import { getAuth } from "../store/reducers/userReducers/loginUserReducer";
 const { Header } = Layout;
 
 const HeaderStyle = styled(Header)`
@@ -24,15 +25,14 @@ const MenuRowStyle = styled(Row)`
 export function HeaderComponent() {
   const dispatch = useDispatch();
   const history = useHistory();
-  const data = getDataLocalStorage('data');
+  const admin = getAdminStorage();
 
-  const { auth } = useSelector((state: any) => state.auth);
+  const auth = useSelector(getAuth());
 
   async function logoutHandleClick() {
     dispatch(logoutUserThunkCreator());
     history.push("/");
   }
-
 
   return (
     <HeaderStyle
@@ -49,7 +49,7 @@ export function HeaderComponent() {
         <Col span={4}>
           {auth && (
             <MenuRowStyle justify="end">
-              {data && data.isAdmin && (
+              {admin && (
                 <Col>
                   <Row justify="center">
                     <Link to="/admin/panel">Админ</Link>

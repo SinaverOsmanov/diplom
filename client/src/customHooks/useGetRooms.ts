@@ -1,14 +1,19 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Dispatch } from "redux";
 import { RoomItemType } from "../common/models";
+import {
+  getRooms,
+  getRoomsLoading,
+} from "../store/reducers/roomsRedurers/getRoomsReducer";
 
 export function useGetRooms(
-  thunkCreator: () => (dispatch: any) => Promise<void>
+  thunkCreator: () => (dispatch: Dispatch) => Promise<void>
 ) {
   const dispatch = useDispatch();
 
-  const rooms: RoomItemType[] = useSelector((state: any) => state.rooms.rooms);
-  const loading: boolean = useSelector((state: any) => state.rooms.loading);
+  const rooms: RoomItemType[] | null = useSelector(getRooms());
+  const loading: boolean = useSelector(getRoomsLoading());
 
   useEffect(() => {
     dispatch(thunkCreator());

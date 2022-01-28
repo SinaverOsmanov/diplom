@@ -1,3 +1,4 @@
+import { Dispatch } from "redux";
 import { addRoomAPI } from "../../../api/httpApi";
 import { GetApiRoomByIdType, RoomFormType } from "../../../common/models";
 
@@ -26,7 +27,7 @@ export function addRoomReducer(
       return { ...state, loading: false, error: action.payload };
 
     default:
-      return state;
+      return { ...state };
   }
 }
 
@@ -37,7 +38,7 @@ export const addRoomAction = (payload: any) => ({
 
 export const addRoomThunkCreator =
   ({ title, description, quality, photoUrl }: RoomFormType) =>
-  async (dispatch: any) => {
+  async (dispatch: Dispatch) => {
     try {
       dispatch({ type: ADD_ROOM_REQUEST });
 

@@ -1,7 +1,8 @@
 import { Image } from "./models/Image";
 import { ObjectId } from "mongodb";
-import { validateAccessToken } from "./service/token";
+import { validateAccessToken } from "./services/token.service";
 import { Response } from "express";
+import { Admin } from "./models/Admin";
 
 export type UserRecord = {
   _id: ObjectId;
@@ -41,17 +42,12 @@ export function roomsMapObjectIdToString(rooms: RoomRecord[]) {
   }));
 }
 
-export function userDto(user: UserRecord) {
-  return { email: user.email, id: user._id };
-}
-
-export function getTokenData(cookies: any): any {
-  const { accessToken }: { accessToken: string } = cookies;
-  return validateAccessToken(accessToken);
-}
-
 export function badRequestJSON(res: Response, status: number, message: string) {
   res.json({
     data: { codeStatus: status, message: message },
   });
+}
+
+export async function isAdmin(userId: string): Promise<string | null> {
+  return await Admin.findOne({ userId });
 }

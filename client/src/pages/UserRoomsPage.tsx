@@ -6,7 +6,7 @@ import { useGetRooms } from "../customHooks/useGetRooms";
 export function UserRoomsPage() {
   const { rooms, loading } = useGetRooms(getUserRoomsThunkCreator);
 
-  if (loading) {
+  if (loading || !rooms) {
     return <Loading />;
   }
 

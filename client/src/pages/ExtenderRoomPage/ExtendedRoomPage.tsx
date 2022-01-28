@@ -5,9 +5,8 @@ import { RoomItemType } from "../../common/models";
 import { useEffect, useState } from "react";
 import { Loading } from "../../utils/loading";
 import { BadgeComponent } from "../../layouts/BadgeComponent";
-import { getRoomByIdThunkCreator } from "../../store/reducers/roomReducers/getRoomByIdReducer";
-import { reservedRoomThunkCreator } from "../../store/reducers/reservedReducers/reservedRoomReducer";
-import { getDataLocalStorage } from "../../utils/localStorage";
+import { getRoom, getRoomByIdThunkCreator, getRoomLoading, reservedRoomThunkCreator } from "../../store/reducers/roomReducers/getRoomByIdReducer";
+import { getAdminStorage } from "../../utils/localStorage";
 import { UpdateRoomForm } from "../../components/roomForm/UpdateRoomForm";
 import { ExtendedPhotoStyle, ExtendedRowStyle } from "./ExtendedRoomPageStyle";
 const { Title } = Typography;
@@ -15,10 +14,10 @@ const { Title } = Typography;
 export function ExtendedRoomPage() {
   let { roomId }: { roomId: string } = useParams();
   const [editRoom, setEditRoom] = useState(false);
-  const room: RoomItemType = useSelector((state: any) => state.room.room);
-  const loading = useSelector((state: any) => state.room.loading);
+  const room: RoomItemType | null = useSelector(getRoom());
+  const loading = useSelector(getRoomLoading());
 
-  const data = getDataLocalStorage('data');
+  const admin = getAdminStorage();
 
   const dispatch = useDispatch();
 
@@ -34,7 +33,7 @@ export function ExtendedRoomPage() {
     dispatch(getRoomByIdThunkCreator(roomId));
   }, [roomId, dispatch]);
 
-  if (loading) {
+  if (loading || !room) {
     return <Loading />;
   }
 
@@ -102,7 +101,7 @@ export function ExtendedRoomPage() {
                 </Col>
               </Row>
               <Row justify="end" style={{ alignSelf: "end" }}>
-                {data && data.isAdmin && (
+                {admin && (
                   <Col>
                     <Button type="ghost" onClick={() => setEditRoom(true)}>
                       Редактировать

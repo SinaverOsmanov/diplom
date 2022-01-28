@@ -1,6 +1,11 @@
+import { Dispatch } from "redux";
 import { createUserAPI } from "../../../api/httpApi";
-import { DefaultStateAuthType, UserType } from "../../../common/models";
-import { setDataLocalStorage } from "../../../utils/localStorage";
+import {
+  DefaultStateAuthType,
+  IUserDataRequest,
+  UserType,
+} from "../../../common/models";
+import { setTokens } from "../../../utils/localStorage";
 import {
   AUTH_USER_REQUEST,
   AUTH_USER_FAIL,
@@ -26,7 +31,7 @@ export function registrationUserReducer(
       return { ...state, error: action.payload, loading: false };
 
     default:
-      return state;
+      return { ...state };
   }
 }
 
@@ -36,14 +41,14 @@ export const registrationUserAction = (payload: boolean) => ({
 });
 
 export const registrationUserThunkCreator =
-  (data: UserType) => async (dispatch: any) => {
+  (data: UserType) => async (dispatch: Dispatch) => {
     try {
       dispatch({ type: AUTH_USER_REQUEST });
 
-      const dataRequest = await createUserAPI(data);
+      const dataRequest: IUserDataRequest = await createUserAPI(data);
 
       if (dataRequest) {
-        setDataLocalStorage("data", dataRequest);
+        setTokens(dataRequest);
         dispatch(registrationUserAction(true));
       }
     } catch (error) {

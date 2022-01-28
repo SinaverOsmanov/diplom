@@ -18,7 +18,7 @@ export function AdminPage() {
   const { pathname } = useLocation();
   const { rooms, loading } = useGetRooms(getRoomsThunkCreator);
 
-  if (loading) {
+  if (loading || !rooms) {
     return <Loading />;
   }
 

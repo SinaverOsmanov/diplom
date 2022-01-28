@@ -7,30 +7,26 @@ import { ExtendedRoomPage } from "../../pages/ExtenderRoomPage/ExtendedRoomPage"
 import { RoomsPage } from "../../pages/RoomsPage";
 import { UserRoomsPage } from "../../pages/UserRoomsPage";
 import { useDispatch, useSelector } from "react-redux";
-import { getDataLocalStorage } from "../../utils/localStorage";
+import { getTokenExpiresDate } from "../../utils/localStorage";
 import { AUTH_USER_SUCCESS } from "../../store/types/types";
 import { useHistory, useLocation } from "react-router";
 import { ContentStyle } from "./ContentComponentStyle";
 import { Routes } from "../../layouts/Routes";
 import { logoutUserThunkCreator } from './../../store/reducers/userReducers/logoutUserReducer';
+import { getUserId } from './../../utils/localStorage';
+import { getAuth } from "../../store/reducers/userReducers/loginUserReducer";
 
 export function ContentComponent() {
-  const { auth } = useSelector((state: any) => state.auth);
+  const auth = useSelector(getAuth());
 
   const dispatch = useDispatch();
   const { pathname } = useLocation();
   const history = useHistory();
   useEffect(() => {
-    const data = getDataLocalStorage('data');
-    const exp = getDataLocalStorage('expiresIn')
-    if (data) {
+    const userId = getUserId()
+    if (userId) {
       dispatch({ type: AUTH_USER_SUCCESS, payload: true });
       history.push(pathname);
-    }
-  
-    if(exp && exp < Date.now()) {
-      dispatch(logoutUserThunkCreator());
-      history.push("/");
     }
   
   }, [dispatch, history, pathname]);
